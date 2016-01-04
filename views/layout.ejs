@@ -5,15 +5,17 @@
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/css/st.css">
 	<script src="/bootstrap/js/jquery.min.js"></script>
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/tinymce/tinymce.min.js"></script>
-	<script>
-		$(function () {
-			tinymce.init({
-				selector: ".tinymce"
-			});
-		});
-	</script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>	
+	<script src="/nicEdit/nicEdit.js"></script>
+	<script type="text/javascript">
+//<![CDATA[
+        bkLib.onDomLoaded(function() { 
+        	new nicEditor({
+        		iconsPath: '/nicEdit/nicEditorIcons.gif'
+        	}).panelInstance('text');
+        });
+  //]]>
+  </script>
 </head>
 <body>
 <div class='panel panel-default' style='background: #428bca; color: #fff'>
