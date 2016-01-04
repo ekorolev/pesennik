@@ -1,3 +1,4 @@
+var dateFormat = require('./lib/dateFormat');
 var express = require('express');
 var redis = require('redis');
 var ejsLocals = require('ejs-locals');

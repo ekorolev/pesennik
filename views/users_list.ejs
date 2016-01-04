@@ -1,0 +1,12 @@
+<%layout('layout')%>
+
+<div class='panel panel-default'>
+	<div class='panel-heading'>
+		Список зарегистрированных пользователей
+	</div>
+	<div class='panel-body'>
+		<ul class='list-unstyled'>
+			<%-partial('partials/user', users)%>
+		</ul>
+	</div>
+</div>

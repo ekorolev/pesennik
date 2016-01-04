@@ -1,0 +1,37 @@
+<%layout('layout')%>
+
+<div class='panel panel-default'>
+	<div class='panel-body'>
+		<% if (first) { %> 
+			<div class='alert alert-success'>
+				<p>Так как вы впервые на сервисе, заполните, пожалуйста, небольшую форму ниже:</p>
+				<p>Эта информация нужна, чтобы я (Евгений Королёв) знал, кто зарегистрировался на сервисе. Впрочем, можете не заполнять эту форму и перейти к сервису.</p>
+			</div>
+		<% } %>
+
+		<form role='form' method='POST' action='/user/addinfo'>
+			<div class='form-group'>
+				<div class='row'>
+					<div class='col-md-6'>
+						<label for='userfname'>Имя</label>
+						<input type='text' name='firstname' class='form-control' id='userfname' value='<%=(user.firstname || "")%>'>
+					</div>
+					<div class='col-md-6'>
+						<label for='usersname'>Фамилия</label>
+						<input type='text' name='secondname' class='form-control' id='usersname' value='<%=(user.secondname || "")%>'>
+					</div>
+				</div>
+			</div>
+			<div class='form-group'>
+				<label for='bdate'>Дата рождения</label>
+				<input type='date' name='bdate' class='form-control' value='<%=(user.formatBdate||"")%>'>
+			</div>
+			<div class='form-group'>
+				<label for='vklink'>Ссылка VK</label>
+				<input type='url' name='vklink' id='vklink' class='form-control' value='<%=(user.vklink || "")%>'>
+			</div>
+			<button type='submit' class='btn btn-success'>Запомнить</button>
+			<a href='/catalog' class='btn btn-danger'>Отменить</a>
+		</form>
+	</div>
+</div>

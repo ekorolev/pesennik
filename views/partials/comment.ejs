@@ -1,0 +1,8 @@
+<div class='form-group' style='border: 1px solid #ddd; padding: 10px;'>
+	<div class='small'><b><%=comment.user%></b>
+	<% if(comment.user_id != user.id) { %>
+		 | <a href='/catalog/<%=comment.user_id%>'>каталог</a>
+	<% } %>
+	</div>
+	<div><%=comment.text%></div>
+</div>

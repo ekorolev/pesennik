@@ -1,0 +1,11 @@
+<li class='form-group'>
+	<div>
+		<b><span><%=user.login%></span></b>
+		<% if (user.firstname || user.secondname) { %>
+			<span class='small'><%=user.firstname%> <%=user.secondname%></span>
+		<% } %>
+	</div>
+	<div class='small'>
+		<a href='/catalog/<%=user._id%>'>Каталог пользователя</a>
+	</div>
+</li>

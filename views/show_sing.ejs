@@ -1,12 +1,38 @@
 <%layout('layout')%>
 <div class="page-header">
   <h3><%=sing.name%> <small><%=sing.author%></small></h3>
-  <a href='/sing/edit/<%=sing._id%>'>Редактировать</a>
-  <a href='/sing/delete/<%=sing._id%>'>Удалить</a>
+  Владелец: <b><%=sing.user%></b>
+  <br>
+  <% if (sing.user_id == user.id) { %>
+  	<a href='/sing/edit/<%=sing._id%>'>Редактировать</a>
+  	<a href='/sing/delete/<%=sing._id%>'>Удалить</a>
+  <% } else { %>
+    <a href='/sing/copy/<%=sing._id%>'>Скопировать эту песню себе</a>
+  <% } %>
 </div>
 
 <div class='panel panel-default'>
 	<pre>
 <%-sing.text%>
 	</pre>	
+</div>
+
+<div class='panel panel-default'>
+	<div class='panel-heading'>
+		Комментарии
+	</div>
+	<div class='panel-body'>
+		<% if (comments.length==0) { %>
+			<center><h3>Без комментариев</h3></center><br>
+		<% } %>
+		<%-partial('partials/comment', comments)%>
+
+		<form role='form' method='POST' action="/sing/addcomment/<%=sing._id%>">
+			<div class='form-group'>
+				<label for='comment'>Добавить комментарий</label>
+				<textarea name='text' id='comment' class='form-control'></textarea>
+			</div>
+			<button type='submit' class='btn btn-success'>Добавить</button>
+		</form>
+	</div>
 </div>
