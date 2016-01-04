@@ -1,0 +1,12 @@
+<%layout('layout')%>
+<div class="page-header">
+  <h3><%=sing.name%> <small><%=sing.author%></small></h3>
+  <a href='/sing/edit/<%=sing._id%>'>Редактировать</a>
+  <a href='/sing/delete/<%=sing._id%>'>Удалить</a>
+</div>
+
+<div class='panel panel-default'>
+	<pre>
+<%-sing.text%>
+	</pre>	
+</div>

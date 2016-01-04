@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Личный песенник</title>
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/st.css">
+	<script src="/bootstrap/js/jquery.min.js"></script>
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/tinymce/tinymce.min.js"></script>
+	<script>
+		$(function () {
+			tinymce.init({
+				selector: ".tinymce"
+			});
+		});
+	</script>
+</head>
+<body>
+<div class='panel panel-default' style='background: #428bca; color: #fff'>
+	<div class='panel-body'>
+		<% if (!user) { %>
+			<p>Для использования сервиса необходима авторизация.</p>
+			<p>Если у вас еще не было учетной записи на сервисе, введите желаемые логин и пароль и учетная запись будет автоматически зарегистрирована.</p>
+			<form class="form-inline" role="form" method="POST" action="/user/login">
+			  <div class="form-group">
+			    <input type="text" name='login' class="form-control" placeholder="Ваш логин">
+			    <input type="password" name="password" class="form-control" placeholder="Пароль">
+			  </div>
+
+			  <button type="submit" class="btn btn-default">Войти</button>
+			</form>
+		<% } else { %> 
+			<div>Учетная запись: <b><%=user.login%></b></div>
+			<div><a href='/user/logout' style='color: #fff; text-decoration: underline'>Покинуть учетную запись</a></div>
+		<% } %>
+	</div>
+</div>
+<% if (user) { %>
+<div class='container-fluid'>
+	<div class='row'>
+		<div class='col-md-3 col-md-offset-1'>
+			<div class="panel panel-default">
+			  <div class="panel-heading">Пользовательское меню</div>
+			  <div class="panel-body">
+			    <ul class='nav nav-pills nav-stacked'>
+					<li><a href='/sing/new'>Добавить песню</a></li>
+					<li><a href='/catalog'>Узреть каталог</a></li>
+					<li>
+						Поиск песни
+						<form role='form' class='navbar-form navbar-left' method='GET' action="/catalog/<%=user.id%>/search">
+							<div class='form-group'>
+								<input name='q' class='form-control' id='search' type='text' placeholder='Название или автор'>
+							</div>
+							<button type='submit' class='btn btn-default '>
+								<span class='glyphicon glyphicon-search'></span>
+							</button>
+						</form>
+					</li>
+				</ul>
+			  </div>
+			</div>
+		</div>
+		<div class='col-md-7'>
+			<%-body%>
+		</div>
+		<div class='col-md-1'>
+		</div>
+	</div>
+</div>
+<% } else { %>
+	<div class='container-fluid'>
+		<div class='row'>
+			<div class='col-md-10 col-md-offset-1'>
+				<div class="jumbotron">
+				  <h1>Что это?</h1>
+				  <p>Перед вами сайт от друга и для друзей. Каждый, кто играет на гитаре и хочет иметь в одном месте все любимые песни, может пользоваться данным сервисом.</p>
+				  <p>Добавляйте песни, редактируйте их, создавайте отдельные сборники из песен, копируйте песни у друзей и распечатывайте их в удобном формате. И все это в одном месте!</p>
+				  <p align="right">
+				  	Евгений
+				  </p>
+				</div>
+			</div>
+		</div>
+	</div>
+<% } %>
+</body>
+</html>

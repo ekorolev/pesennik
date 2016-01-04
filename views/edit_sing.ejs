@@ -1,0 +1,25 @@
+<%layout('layout')%>
+
+<form role='form' action='/sing/update/<%=sing._id%>' method='POST'>
+	<div class='form-group'>
+		<label for='authorOfSing'>Автор песни</label>
+		<input type='text' name="author" id='authorOfSing' class='form-control' readonly value='<%=sing.author%>'>
+	</div>
+	<div class='form-group'>
+		<label for='nameOfSing'>Название песни</label>
+		<input type='text' name="name" id='nameOfSing' class='form-control' value='<%=sing.name%>'>
+	</div>
+	<div class='form-group'>
+		<script type="text/javascript">
+			function toggleEditor() {
+				$('textarea').toggleClass('tinymce');
+			}
+		</script>
+		<button class='btn btn-default' on-click="toggleEditor()">Не использовать редактор</button>
+	</div>
+	<div class='form-group'>
+		<label for='textOfSing'>Текст произведения</label>
+		<textarea name="text" id='textOfSing' class='form-control tinymce' style='height: 200px;'><%=sing.text%></textarea>
+	</div>
+	<button type="submit" class="btn btn-default">Изменить песню</button>
+</form>

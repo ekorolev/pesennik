@@ -1,0 +1,18 @@
+ <% if (author.sings.length>0) { %> 
+ <div class="panel panel-default">
+	<div class="panel-heading">
+	  <h4 class="panel-title">
+	          <a data-toggle="collapse" data-parent="#accordion" href="#author_<%=author._id%>">
+	            <%=author.name%>
+	          </a>
+	        </h4>
+	</div>
+	<div id="author_<%=author._id%>" class="panel-collapse collapse <%=(user.collapseIn?'in':'')%>">
+	  <div class="panel-body">
+	  	<ul class='list-unstyled'>
+	  		<%-partial('sing', author.sings)%>
+	  	</ul>
+	  </div>
+	</div>
+</div>
+<% } %>

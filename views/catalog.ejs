@@ -1,0 +1,17 @@
+<%-layout('layout')%>
+
+<li><a href='/user/toggleCollapse'>
+	<% if (user.collapseIn) { %>
+		Свернуть все
+	<% } else { %>
+		Развернуть все
+	<% } %>
+</a></li>
+<li><a href='/catalog/print' target="blank">
+	Показать в печатном виде
+</a></li>
+<br><br>
+
+<div class='panel-group' id='accordion'>
+	<%-partial('partials/author', authors)%>
+</div>

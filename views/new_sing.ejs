@@ -1,0 +1,17 @@
+<%layout('layout')%>
+
+<form role='form' action='/sing/create' method='POST'>
+	<div class='form-group'>
+		<label for='authorOfSing'>Автор песни</label>
+		<input type='text' name="author" id='authorOfSing' class='form-control' >
+	</div>
+	<div class='form-group'>
+		<label for='nameOfSing'>Название песни</label>
+		<input type='text' name="name" id='nameOfSing' class='form-control' >
+	</div>
+	<div class='form-group'>
+		<label for='textOfSing'>Текст произведения</label>
+		<textarea name="text" id='textOfSing' class='form-control tinymce' style='height: 200px;'></textarea>
+	</div>
+	<button type="submit" class="btn btn-default">Добавить песню</button>
+</form>
