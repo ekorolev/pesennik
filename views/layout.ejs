@@ -18,9 +18,9 @@
   </script>
 </head>
 <body>
-<div class='panel panel-default' style='background: #428bca; color: #fff'>
-	<div class='panel-body'>
-		<% if (!user) { %>
+<% if (!user) { %>
+	<div class='panel panel-default' style='background: #428bca; color: #fff'>
+		<div class='panel-body'>
 			<p>Для использования сервиса необходима авторизация.</p>
 			<p>Если у вас еще не было учетной записи на сервисе, введите желаемые логин и пароль и учетная запись будет автоматически зарегистрирована.</p>
 			<form class="form-inline" role="form" method="POST" action="/user/login">
@@ -31,12 +31,45 @@
 
 			  <button type="submit" class="btn btn-default">Войти</button>
 			</form>
-		<% } else { %> 
-			<div>Учетная запись: <b><%=user.login%></b></div>
-			<div><a href='/user/logout' style='color: #fff; text-decoration: underline'>Покинуть учетную запись</a></div>
-		<% } %>
+		</div>
 	</div>
-</div>
+<% } else { %>
+	<div style='background: #428bca;color:#fff;padding:5px;height: 45px;margin-bottom: 20px;'>
+		<div class='container-fluid'>
+			<div class='row'>
+				<div class='col-md-3'>
+					<div style='float: left;margin-right: 20px;line-height: 35px;'>
+						<a href='/user/logout' style='color:#fff' title='Покинуть учетную запись'>
+							<span class='glyphicon glyphicon-log-out'></span>
+						</a>
+					</div>
+					<div style='float: left;line-height: 35px;'>
+						Привет, <%=(user.firstname?(user.firstname+" "+user.secondname):(user.login))%>!
+					</div>
+				</div>
+				<div class='col-md-9'>
+					<form class='form-inline' method='GET' action="/catalog/<%=(owner)?owner.id:user.id%>/search">
+						<div class='form-group' style='float: right'>
+							<label for='search'>
+								<% if (owner) { %> 
+									Поиск по каталогу <%=owner.login%>
+								<% } else { %>
+									Поиск по вашему каталогу
+								<% } %>
+							</label>
+							<input name='q' class='form-control col-ms-9' id='search' type='text' placeholder='Название или автор'>
+							<button type='submit' class='btn btn-default'>
+								<span class='glyphicon glyphicon-search'></span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+<% } %>
+
 <% if (user) { %>
 <div class='container-fluid'>
 	<div class='row'>
@@ -52,17 +85,6 @@
 					<li><a href='/user/addinfo'>Изменить профиль</a></li>
 					<li><a href='/user/newpassword'>Поменять пароль</a></li>
 				</ul>
-				<BR><BR>
-				<form role='form' class='navbar-form navbar-left' method='GET' action="/catalog/<%=user.id%>/search">
-					<div class='form-group'>
-						<label for='search'>Поиск песни</label>
-						<input name='q' class='form-control col-ms-9' id='search' type='text' placeholder='Название или автор'>
-						<button type='submit' class='btn btn-default'>
-							<span class='glyphicon glyphicon-search'></span>
-						</button>
-					</div>
-
-				</form>
 			  </div>
 			</div>
 			<% if (user.admin) { %> 

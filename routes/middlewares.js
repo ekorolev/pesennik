@@ -20,6 +20,7 @@ module.exports = function (opts) {
 	app.use( function (req, res, next) {
 		if (req.user) {
 			req.app.locals.user = req.user.secureInfo();
+			req.app.locals.owner = false;
 			next();
 		} else {
 			req.app.locals.user = false;
