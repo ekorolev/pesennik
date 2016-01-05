@@ -10,6 +10,7 @@
 	</div>
 	<% if (user.admin) { %> 
 		<div class='small'>
+			Последняя активность: <%=luser.lastActivity%> 
 			<a href='/user/<%=luser._id%>/delete'>Удалить</a>, 
 			<a href='/user/<%=luser._id%>/passw'>Новый пароль</a>
 		</div>

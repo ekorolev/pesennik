@@ -117,6 +117,9 @@ module.exports = function (opts) {
 		var query = Users.find({}).sort({login: 1});
 		query.exec(function (err, users) {
 			if (err) res.send('error #027 cannot get users list'); else {
+				users = users.map(function (item) {
+					return item.secureInfo();
+				})
 				res.render('users_list', {
 					l_users: users
 				});

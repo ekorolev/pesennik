@@ -11,6 +11,13 @@ module.exports = function (opts) {
 			Users.findById(userId, function (err, user) {
 				if (err) res.send('error #001'); else {
 					req.user = user;
+					var now = new Date();
+					if (!user.lastActivity) user.lastActivity = new Date();
+					var lA = new Date(user.lastActivity);
+					if ( (now.getTime() - lA.getTime()) > 5 * 60 * 1000 ) {
+						user.lastActivity = now;
+					}
+					user.save();
 					next();
 				}
 			});

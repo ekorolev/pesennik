@@ -12,6 +12,7 @@ module.exports = function (mongoose) {
 		admin: Boolean,
 		cryptNow: Boolean,
 		singCount: { type: Number, default: 0 },
+		lastActivity: Date
 	});
 	Schema.pre('save', function (next) {
 		var _self = this;
@@ -35,6 +36,7 @@ module.exports = function (mongoose) {
 	Schema.methods.secureInfo = function () {
 		var self = this;
 		var d = new Date(self.bdate);
+		var activity = new Date(self.lastActivity);
 		return {
 			login: self.login,
 			collapseIn: self.collapseIn,
@@ -45,7 +47,8 @@ module.exports = function (mongoose) {
 			formatBdate: self.bdate?d.format('yyyy-mm-dd'):"",
 			id: self._id.toString(),
 			admin: self.admin,
-			singCount: self.singCount
+			singCount: self.singCount,
+			lastActivity: self.lastActivity? activity.format('yyyy-mm-dd HH:MM:ss') : 'none',
 		};
 	}
 	var model = mongoose.model('users', Schema);
