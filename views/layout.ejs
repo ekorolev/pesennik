@@ -51,7 +51,7 @@
 					<form class='form-inline' method='GET' action="/catalog/<%=(owner)?owner.id:user.id%>/search">
 						<div class='form-group' style='float: right'>
 							<label for='search'>
-								<% if (owner) { %> 
+								<% if (owner && owner.id!=user.id) { %> 
 									Поиск по каталогу <%=owner.login%>
 								<% } else { %>
 									Поиск по вашему каталогу
