@@ -2,8 +2,10 @@
 	<div style='display: inline-block'>
 		<a href='/sing/show/<%=sing._id%>'><%=sing.author%> - <%=sing.name%></a>
 	</div>
-	<div style="display: inline-block; float: right;">
-		<a href='/sing/edit/<%=sing._id%>'><span class='glyphicon glyphicon-pencil'></span></a> 
-		<a href='/sing/delete/<%=sing._id%>'><span class='glyphicon glyphicon-remove'></span></a> 
-	</div>
+	<% if (owner.id==user.id) { %> 
+		<div style="display: inline-block; float: right;">
+			<a href='/sing/edit/<%=sing._id%>'><span class='glyphicon glyphicon-pencil'></span></a> 
+			<a href='/sing/delete/<%=sing._id%>'><span class='glyphicon glyphicon-remove'></span></a> 
+		</div>
+	<% } %>
 </li>

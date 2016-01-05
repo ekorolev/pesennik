@@ -204,6 +204,9 @@ module.exports = function (opts) {
 						cb( null, authors);
 					}
 				});
+			},
+			owner: function (cb) {
+				Users.findById(user_id, cb);
 			}
 		}, function (err, results) {
 			if (err) res.send('error #009'); else {
@@ -221,7 +224,8 @@ module.exports = function (opts) {
 				}
 				res.render('catalog',{
 					authors: authors,
-					user_id: user_id
+					user_id: user_id,
+					owner: results.owner.secureInfo()
 				});
 
 			}
