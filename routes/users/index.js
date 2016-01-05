@@ -45,7 +45,7 @@ module.exports = function (opts) {
 	var userDelete = prepareUserDelete(opts);
 	
 	app.post('/user/login', function (req, res) {
-		Users.findOne({login: req.body.login}, function( err, user ) {
+		Users.findOne({login: {$regex: req.body.login, $options: 'i'}}, function( err, user ) {
 			if (err) res.send('error #002'); else {
 
 				if (!user) {
