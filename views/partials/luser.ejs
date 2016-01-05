@@ -6,13 +6,13 @@
 		<% } %>
 	</div>
 	<div class='small'>
-		<a href='/catalog/<%=luser._id%>'>Каталог пользователя</a>
+		<a href='/catalog/<%=luser.id%>'>Каталог пользователя</a>
 	</div>
 	<% if (user.admin) { %> 
 		<div class='small'>
 			Последняя активность: <%=luser.lastActivity%> 
-			<a href='/user/<%=luser._id%>/delete'>Удалить</a>, 
-			<a href='/user/<%=luser._id%>/passw'>Новый пароль</a>
+			<a href='/user/<%=luser.id%>/delete'>Удалить</a>, 
+			<a href='/user/<%=luser.id%>/passw'>Новый пароль</a>
 		</div>
 	<% } %>
 </li>
