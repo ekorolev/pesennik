@@ -28,6 +28,11 @@ var gettingCreateSingFunction = function (opts) {
 						}
 					}
 				})
+			},
+			user: function (cb) {
+				if (!user.singCount) user.singCount = 0;
+				user.singCount++;
+				user.save(cb);
 			}
 		}, function (err, results) {
 			if (err) callback(err); else {
@@ -118,8 +123,14 @@ module.exports = function (opts) {
 					if (sing.user_id!=req.user._id.toString()) {
 						res.send('you are not the owner of song')
 					} else {
-						sing.remove();
-						res.redirect('/catalog');
+						Users.findById(sing.user_id, function (err, user) {
+							if (user) {
+								user.singCount--;
+								user.save();
+							}
+							sing.remove();
+							res.redirect('/catalog/'+user._id.toString());
+						});
 					}
 				}
 			}

@@ -11,6 +11,7 @@ module.exports = function (mongoose) {
 		regTime: Date,
 		admin: Boolean,
 		cryptNow: Boolean,
+		singCount: { type: Number, default: 0 },
 	});
 	Schema.pre('save', function (next) {
 		var _self = this;
@@ -43,7 +44,8 @@ module.exports = function (mongoose) {
 			bdate: self.bdate,
 			formatBdate: self.bdate?d.format('yyyy-mm-dd'):"",
 			id: self._id.toString(),
-			admin: self.admin
+			admin: self.admin,
+			singCount: self.singCount
 		};
 	}
 	var model = mongoose.model('users', Schema);

@@ -1,15 +1,20 @@
 <%-layout('layout')%>
 
-<li><a href='/user/toggleCollapse'>
-	<% if (user.collapseIn) { %>
-		Свернуть все
-	<% } else { %>
-		Развернуть все
-	<% } %>
-</a></li>
-<li><a href='/catalog/print/<%=user_id%>' target="blank">
-	Показать в печатном виде
-</a></li>
+<ul class='list-unstyled'>
+	<li>
+		Всего добавлено песен: <%=user.singCount%>
+	</li>
+	<li><a href='/user/toggleCollapse'>
+		<% if (user.collapseIn) { %>
+			Свернуть все
+		<% } else { %>
+			Развернуть все
+		<% } %>
+	</a></li>
+	<li><a href='/catalog/print/<%=user_id%>' target="blank">
+		Показать в печатном виде
+	</a></li>
+</ul>
 <br><br>
 
 <div class='panel-group' id='accordion'>
