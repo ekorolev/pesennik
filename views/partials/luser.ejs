@@ -1,0 +1,17 @@
+<li class='form-group'>
+	<div>
+		<b><span><%=luser.login%></span></b>
+		<% if (luser.firstname || luser.secondname) { %>
+			<span class='small'><%=luser.firstname%> <%=luser.secondname%></span>
+		<% } %>
+	</div>
+	<div class='small'>
+		<a href='/catalog/<%=luser._id%>'>Каталог пользователя</a>
+	</div>
+	<% if (user.admin) { %> 
+		<div class='small'>
+			<a href='/user/<%=luser._id%>/delete'>Удалить</a>, 
+			<a href='/user/<%=luser._id%>/passw'>Новый пароль</a>
+		</div>
+	<% } %>
+</li>

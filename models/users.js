@@ -9,13 +9,16 @@ module.exports = function (mongoose) {
 		vklink: String,
 		bdate: Date,
 		regTime: Date,
+		admin: Boolean,
+		cryptNow: Boolean,
 	});
 	Schema.pre('save', function (next) {
 		var _self = this;
-		if (_self.isNew) {
+		if (_self.isNew || _self.cryptNow) {
 			bcrypt.hash(_self.password, 8, function (err, hash) {
 				if (err) next(new Error('Error')); else {
 					_self.password = hash;
+					_self.cryptNow = false;
 					next();
 				}
 			});
@@ -39,7 +42,8 @@ module.exports = function (mongoose) {
 			vklink: self.vklink,
 			bdate: self.bdate,
 			formatBdate: self.bdate?d.format('yyyy-mm-dd'):"",
-			id: self._id.toString()
+			id: self._id.toString(),
+			admin: self.admin
 		};
 	}
 	var model = mongoose.model('users', Schema);

@@ -48,6 +48,9 @@
 					<li><a href='/sing/new'>Добавить песню</a></li>
 					<li><a href='/catalog'>Мой каталог</a></li>
 					<li><a href='/user/list'>Все пользователи</a></li>
+					<li>&nbsp;</li>
+					<li><a href='/user/addinfo'>Изменить профиль</a></li>
+					<li><a href='/user/newpassword'>Поменять пароль</a></li>
 				</ul>
 				<BR><BR>
 				<form role='form' class='navbar-form navbar-left' method='GET' action="/catalog/<%=user.id%>/search">
@@ -62,6 +65,16 @@
 				</form>
 			  </div>
 			</div>
+			<% if (user.admin) { %> 
+				<div class="panel panel-default">
+				  <div class="panel-heading">Меню администратора</div>
+				  <div class="panel-body">
+				    <ul class='nav nav-pills nav-stacked'>
+						<li><a href='#'>Ничего не делать</a></li>
+					</ul>
+				  </div>
+				</div>
+			<% } %>
 		</div>
 		<div class='col-md-9'>
 			<%-body%>
