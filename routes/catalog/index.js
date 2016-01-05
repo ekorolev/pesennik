@@ -283,8 +283,8 @@ module.exports = function (opts) {
 		var exec = Sings.find({
 			user_id: user_id,
 			$or: [
-				{ name: { $regex: query } },
-				{ author: { $regex: query } },
+				{ name: { $regex: query, $options: 'i' } },
+				{ author: { $regex: query, $options: 'i' } },
 			]
 		});
 
