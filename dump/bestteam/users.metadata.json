@@ -1,1 +1,0 @@
-{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "bestteam.users", "name" : "_id_" }, { "v" : 1, "key" : { "login" : 1 }, "unique" : true, "ns" : "bestteam.users", "name" : "login_1", "background" : true } ] }

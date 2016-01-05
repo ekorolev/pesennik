@@ -48,18 +48,18 @@
 					<li><a href='/sing/new'>Добавить песню</a></li>
 					<li><a href='/catalog'>Мой каталог</a></li>
 					<li><a href='/user/list'>Все пользователи</a></li>
-					<li>
-						Поиск песни
-						<form role='form' class='navbar-form navbar-left' method='GET' action="/catalog/<%=user.id%>/search">
-							<div class='form-group'>
-								<input name='q' class='form-control' id='search' type='text' placeholder='Название или автор'>
-							</div>
-							<button type='submit' class='btn btn-default '>
-								<span class='glyphicon glyphicon-search'></span>
-							</button>
-						</form>
-					</li>
 				</ul>
+				<BR><BR>
+				<form role='form' class='navbar-form navbar-left' method='GET' action="/catalog/<%=user.id%>/search">
+					<div class='form-group'>
+						<label for='search'>Поиск песни</label>
+						<input name='q' class='form-control col-ms-9' id='search' type='text' placeholder='Название или автор'>
+						<button type='submit' class='btn btn-default'>
+							<span class='glyphicon glyphicon-search'></span>
+						</button>
+					</div>
+
+				</form>
 			  </div>
 			</div>
 		</div>
