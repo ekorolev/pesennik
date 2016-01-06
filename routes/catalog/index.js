@@ -237,7 +237,7 @@ module.exports = function (opts) {
 			sings: function (cb) {
 				var exec = Sings.find({
 					user_id: user_id
-				}).sort({ name: 1 });
+				}).sort({ author: 1 });
 				exec.exec(function (err, sings) {
 					if (err) cb(new Error(err)); else {
 						cb(null, sings);
@@ -274,7 +274,8 @@ module.exports = function (opts) {
 				res.render('catalog',{
 					authors: authors,
 					user_id: user_id,
-					owner: results.owner.secureInfo()
+					owner: results.owner.secureInfo(),
+					sings: sings
 				});
 
 			}

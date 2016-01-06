@@ -4,19 +4,28 @@
 	<li>
 		Всего добавлено песен: <%=owner.singCount%>
 	</li>
-	<li><a href='/user/toggleCollapse'>
-		<% if (user.collapseIn) { %>
-			Свернуть все
-		<% } else { %>
-			Развернуть все
-		<% } %>
-	</a></li>
 	<li><a href='/catalog/print/<%=user_id%>' target="blank">
 		Показать в печатном виде
 	</a></li>
 </ul>
-<br><br>
 
-<div class='panel-group' id='accordion'>
-	<%-partial('partials/author', authors)%>
+<div>
+	<ul class='list-unstyled'>
+		<%
+			var prevAuth = "undefined";
+			for (var i = 0; i<sings.length; ++i) {
+				var sing = sings[i];
+				if (prevAuth != sing.author ) {
+					%>
+						<li>&nbsp;</li>
+						<li><b><%=sing.author%></b></li>
+					<%
+					prevAuth = sing.author;
+				}
+				%>
+					<%-include partials/sing.ejs%>
+				<%
+			}
+		%>
+	</ul>
 </div>
