@@ -8,6 +8,8 @@ var session = require('express-session');
 var mongoose = require('mongoose').connect('mongodb://localhost/pesennik');
 var models = require('./models')(mongoose);
 var routes = require('./routes');
+var fs = require('fs');
+var jquery = fs.readFileSync('./scripts/jquery.min.js', 'utf-8');
 
 var redisClient = redis.createClient();
 var RedisStore = require('connect-redis')(session);
@@ -30,7 +32,8 @@ app.use( session({
 
 var opts = {
 	app: app,
-	models: models
+	models: models,
+	jquery: jquery
 };
 routes(opts);
 

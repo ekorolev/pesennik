@@ -1,4 +1,6 @@
 var async = require('async');
+var request = require('request');
+var jsdom = require('node-jsdom');
 
 var gettingCreateSingFunction = function (opts) {
 	var Authors = opts.models.authors;
@@ -9,6 +11,7 @@ var gettingCreateSingFunction = function (opts) {
 		var author = opts.author;
 		var text = opts.text;
 		var name = opts.name;
+		var copylink = opts.copylink;
 
 		async.parallel({
 			author: function (cb) {
@@ -42,7 +45,8 @@ var gettingCreateSingFunction = function (opts) {
 					author_id: results.author._id.toString(),
 					user: user.login,
 					user_id: user._id.toString(),
-					text: text
+					text: text,
+					copylink: copylink
 				});
 
 				sing.save(function (err, sing) {
@@ -53,6 +57,30 @@ var gettingCreateSingFunction = function (opts) {
 	};
 }
 
+var prepareGetSingFromAMDM = function ( opts ) {
+	var jquery = opts.jquery;
+	return function (link, callback) {
+		request(link, function (err, response, body) {
+			if (err) {
+				callback(new Error(err));
+			} else {
+				jsdom.env({
+					html: body,
+					src: [jquery],
+					done: function (errors, window) {
+						if (errors) {
+							callback(new Error(errors));
+						} else {
+							callback(null, window.$('pre').text());
+						}
+					}
+				});				
+			}
+
+		})
+	}
+}
+
 module.exports = function (opts) {
 	var Sings = opts.models.sings;
 	var Authors = opts.models.authors;
@@ -61,21 +89,40 @@ module.exports = function (opts) {
 	var app = opts.app;
 
 	var createSing = gettingCreateSingFunction(opts);
+	var getSingFromAMDM = prepareGetSingFromAMDM(opts);
 
 	app.get('/sing/new', function (req, res) { res.render('new_sing')});
 
 	// Создание новой песенки
 	app.post('/sing/create', function (req, res) {
-		createSing({
-			author: req.body.author,
-			name: req.body.name,
-			text: req.body.text,
-			user: req.user
-		}, function (err, sing) {
-			if (err) res.send('error #050'); else {
-				res.redirect('/sing/show/'+sing._id.toString());
-			}
-		});
+		if (req.body.copylink) {
+			getSingFromAMDM(req.body.copylink, function (err, text) {
+				if (err) res.send('error #070'); else {
+					createSing({
+						author: req.body.author,
+						name: req.body.name,
+						text: text,
+						user: req.user,
+						copylink: req.body.copylink
+					}, function (err, sing) {
+						if (err) res.send('error #050'); else {
+							res.redirect('/sing/show/'+sing._id.toString());
+						}
+					});					
+				}
+			});
+		} else {
+			createSing({
+				author: req.body.author,
+				name: req.body.name,
+				text: req.body.text,
+				user: req.user
+			}, function (err, sing) {
+				if (err) res.send('error #050'); else {
+					res.redirect('/sing/show/'+sing._id.toString());
+				}
+			});
+		}
 	});
 	// Жалкое копирование
 	app.get('/sing/copy/:sing_id', function (req, res) {
@@ -87,7 +134,8 @@ module.exports = function (opts) {
 						author: sing.author,
 						name: sing.name,
 						text: sing.text,
-						user: req.user
+						user: req.user,
+						copylink: sing.copylink
 					}, function (err, sing) {
 						if (err) res.send('error #052'); else {
 							res.redirect('/sing/show/'+sing._id.toString());

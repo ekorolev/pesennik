@@ -6,6 +6,7 @@ module.exports = function (mongoose) {
 		user_id: String,
 		user: String,
 		text: String,
+		copylink: String,
 	});
 
 	var model = mongoose.model('sings', Schema);

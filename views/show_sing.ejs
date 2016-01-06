@@ -2,6 +2,9 @@
 <div class="page-header">
   <h3><%=sing.name%> <small><%=sing.author%></small></h3>
   Владелец: <b><%=sing.user%></b>
+  <% if (sing.copylink) { %>
+  	<br>Оригинал: <a href='<%=sing.copylink%>'><%=sing.copylink%></a>
+  <% } %>
   <br>
   <% if (sing.user_id == user.id) { %>
   	<a href='/sing/edit/<%=sing._id%>'>Редактировать</a>
