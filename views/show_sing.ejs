@@ -2,6 +2,9 @@
 <div class="page-header">
   <h3><%=sing.name%> <small><%=sing.author%></small></h3>
   Владелец: <b><%=sing.user%></b>
+  <% if (sing.createdAt) { %>
+  	<br>Добавлена: <%=sing.createdAt.format('dd mmm yyyy, HH:mm')%>
+  <% } %>
   <% if (sing.copylink) { %>
   	<br>Оригинал: <a href='<%=sing.copylink%>'><%=sing.copylink%></a>
   <% } %>

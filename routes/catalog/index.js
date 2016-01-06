@@ -46,7 +46,8 @@ var gettingCreateSingFunction = function (opts) {
 					user: user.login,
 					user_id: user._id.toString(),
 					text: text,
-					copylink: copylink
+					copylink: copylink,
+					createdAt: new Date()
 				});
 
 				sing.save(function (err, sing) {
