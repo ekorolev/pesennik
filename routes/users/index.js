@@ -157,11 +157,18 @@ module.exports = function (opts) {
 	});
 
 	app.get('/user/:user_id/delete', function (req, res) {
+		var yes = req.session.yes;
 		if (!req.user.admin) res.send('you are not admin'); else {
-			var user_id = req.params.user_id;
-			userDelete(user_id, function () {
-				res.redirect('/user/list');
-			});
+			if (!yes) {
+				req.session.yes = true;
+				res.send('Ты уверен? Перезагрузи страницу, если да.');					
+			} else {
+				req.session.yes = false;
+				var user_id = req.params.user_id;
+				userDelete(user_id, function () {
+					res.redirect('/user/list');
+				});
+			}
 		}
 	});
 
