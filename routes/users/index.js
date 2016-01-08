@@ -63,7 +63,11 @@ module.exports = function (opts) {
 				} else {
 					user.compare(req.body.password, function (err, isMatch) {
 						if (err) res.send('error #019'); else {
-							if (!isMatch) res.send('Invalid password'); else {
+							if (!isMatch) {
+								res.render('pages/invalid_password',{
+									login: user.login
+								});
+							} else {
 								req.session.userId = user._id.toString();
 								res.redirect('/');
 							}
