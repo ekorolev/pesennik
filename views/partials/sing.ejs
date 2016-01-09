@@ -1,6 +1,16 @@
 <li>
 	<div style='display: inline-block'>
+		<% if (sing.user_id == user.id) {
+			var text;
+			var type;
+			if (!sing.status) { type = 'default';}
+			if (sing.status=='no') { type='danger'; text='Не выучена'; }
+			if (sing.status=='in') { type='warning'; text='В процессе изучения'; }
+			if (sing.status=='yes') { type='success'; text='Выучена'; }
+			%> 
+		<% } %>
 		<a href='/sing/show/<%=sing._id%>'><%=sing.author%> - <%=sing.name%></a>
+		<% if (sing.status) { %> <span class='label label-<%=type%>'><%=text%> <% } %>
 	</div>
 	<% if (owner.id==user.id) { %> 
 		<div style="display: inline-block; float: right;">
