@@ -30,9 +30,12 @@ app.use( session({
 	secret: "98**189jdh*!oih"
 }));
 
-authsystem({
-	app: app
+var AuthSystem = authsystem({
+	app: app,
+	userSchema: require('./models/users')(mongoose),
+	mongoose: mongoose
 });
+models.users = AuthSystem.users;
 var opts = {
 	app: app,
 	models: models,
