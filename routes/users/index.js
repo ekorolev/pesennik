@@ -160,7 +160,7 @@ module.exports = function (opts) {
 		}
 	});
 
-	app.get('/user/:user_id/delete', function (req, res) {
+	app.aget('/user/:user_id/delete', function (req, res) {
 		var yes = req.session.yes;
 		if (!req.user.admin) res.send('you are not admin'); else {
 			if (!yes) {

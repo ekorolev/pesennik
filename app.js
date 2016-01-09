@@ -10,6 +10,7 @@ var models = require('./models')(mongoose);
 var routes = require('./routes');
 var fs = require('fs');
 var jquery = fs.readFileSync('./scripts/jquery.min.js', 'utf-8');
+var authsystem = require('authsystem');
 
 var redisClient = redis.createClient();
 var RedisStore = require('connect-redis')(session);
@@ -29,7 +30,9 @@ app.use( session({
 	secret: "98**189jdh*!oih"
 }));
 
-
+authsystem({
+	app: app
+});
 var opts = {
 	app: app,
 	models: models,

@@ -12,7 +12,8 @@ module.exports = function (mongoose) {
 		admin: Boolean,
 		cryptNow: Boolean,
 		singCount: { type: Number, default: 0 },
-		lastActivity: Date
+		lastActivity: Date,
+		role: String
 	});
 	Schema.pre('save', function (next) {
 		var _self = this;
