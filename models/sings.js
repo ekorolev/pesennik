@@ -8,6 +8,7 @@ module.exports = function (mongoose) {
 		text: String,
 		copylink: String,
 		createdAt: Date,
+		status: String
 	});
 
 	var model = mongoose.model('sings', Schema);

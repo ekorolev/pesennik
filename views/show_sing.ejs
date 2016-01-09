@@ -15,6 +15,15 @@
   <% } else { %>
     <a href='/sing/copy/<%=sing._id%>'>Скопировать эту песню себе</a>
   <% } %>
+
+  <% if (sing.user_id == user.id) { %>
+  	<br><BR>
+  	Статус песни:
+  	<% if (!sing.status) { %> <b>Не определен</b> \ <% } %>
+  	<% if (sing.status=='no') { %> <b>Не выучена</b><% } else { %><a href='/sing/<%=sing._id%>/learn/no'>Не выучена</a><% } %> \ 
+  	<% if (sing.status=='in') { %> <b>В процессе изучения</b><% } else { %><a href='/sing/<%=sing._id%>/learn/in'>В процессе изучения</a><% } %> \
+  	<% if (sing.status=='yes') { %> <b>Выучена</b><% } else { %><a href='/sing/<%=sing._id%>/learn/yes'>Выучена</a><% } %>
+  <% } %>
 </div>
 
 <div class='panel-body'>

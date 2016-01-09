@@ -365,4 +365,30 @@ module.exports = function (opts) {
 			}
 		})
 	});
+
+	app.get('/sing/:sing_id/learn/:type', function (req, res) {
+		var type=req.params.type;
+		var sing_id = req.params.sing_id;
+		Sings.findById(sing_id, function (err, sing) {
+			if (err) res.send('error #090'); else {
+				if (!sing) res.send('Not found'); else {
+					if (sing.user_id != req.user._id.toString()) {
+						res.send('You are not owner of song');
+					} else {
+						var types = ['yes', 'no', 'in'];
+						if (type!='yes' && type!='no' && type!='in') {
+							res.send('Incorrect type');
+						} else {
+							sing.status = type;
+							sing.save( function (err, sing) {
+								if (err) res.send('error #091'); else {
+									res.redirect('/sing/show/'+sing._id.toString());
+								}
+							});
+						}
+					}
+				}
+			}
+		})
+	});
 }
