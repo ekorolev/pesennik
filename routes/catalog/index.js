@@ -233,11 +233,16 @@ module.exports = function (opts) {
 	});
 	app.get('/catalog/:user_id', function (req, res) {
 		var user_id = req.params.user_id;
+		var status = req.query.status;
 		async.parallel({
 			sings: function (cb) {
-				var exec = Sings.find({
+				var query = {
 					user_id: user_id
-				}).sort({ author: 1 });
+				};
+				if (status) query.status=status;
+
+				var exec = Sings.find(query).sort({ author: 1 });
+
 				exec.exec(function (err, sings) {
 					if (err) cb(new Error(err)); else {
 						cb(null, sings);

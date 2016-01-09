@@ -7,6 +7,15 @@
 	<li><a href='/catalog/print/<%=user_id%>' target="blank">
 		Показать в печатном виде
 	</a></li>
+	<% if (user.id==user_id) { %>
+		<li>
+			Показать только:
+			<a href='/catalog/<%=user_id%>?status=no'>Невыученные песни</a> \
+			<a href='/catalog/<%=user_id%>?status=in'>Песни в процессе изучения</a> \
+			<a href='/catalog/<%=user_id%>?status=yes'>Выученные песни</a> \
+			<a href='/catalog/<%=user_id%>'>Показать все</a>
+		</li>
+	<% } %>
 </ul>
 
 <div>
