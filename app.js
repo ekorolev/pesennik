@@ -10,7 +10,7 @@ var models = require('./models')(mongoose);
 var routes = require('./routes');
 var fs = require('fs');
 var jquery = fs.readFileSync('./scripts/jquery.min.js', 'utf-8');
-var authsystem = require('authsystem');
+var authsystem = require('./lib/authsystem');
 
 var redisClient = redis.createClient();
 var RedisStore = require('connect-redis')(session);
