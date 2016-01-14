@@ -15,7 +15,42 @@
   <% } else { %>
     <a href='/sing/copy/<%=sing._id%>'>Скопировать эту песню себе</a>
   <% } %>
-
+  <div>
+    <span>Автопрокрутка: </span>
+    <a class="js-autoroll-faster" href="#">| + |</a>&nbsp;&nbsp;&nbsp;
+    <a class="js-autoroll-slower" href="#">| - |</a>
+    <script type="text/javascript">
+      $(function() {
+        var $fasterBtn = $('.js-autoroll-faster'),
+            $slowerBtn = $('.js-autoroll-slower'),
+            rollVelocity = 0, lastRollVelocity = 0;
+        
+        rollVelocity = 0;
+        setInterval(function() {
+          $('html, body').stop();
+          if (rollVelocity > 0) {
+             $('html, body').animate({
+              scrollTop: $(document).scrollTop() + rollVelocity * 3
+            }, 1050, 'linear');
+          }
+        }, 1000);
+        $('body').on('click', function() {
+          $('html, body').stop();
+          rollVelocity = 0;
+        });
+        $fasterBtn.on('click', function(event) {
+          if (rollVelocity < 10) ++rollVelocity;
+          event.stopPropagation();
+          return false;
+        });
+        $slowerBtn.on('click', function(event) {
+          if (rollVelocity > 0) --rollVelocity;
+          event.stopPropagation();
+          return false;
+        });
+      });
+    </script>
+  </div>
   <% if (sing.user_id == user.id) { %>
   	<br><BR>
   	Статус песни:
