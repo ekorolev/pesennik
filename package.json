@@ -1,0 +1,24 @@
+{
+  "name": "pesennik",
+  "version": "0.0.1",
+  "description": "Personal store for accorde and song texts",
+  "scripts": {
+    "serv": "forever start app.js",
+    "reload": "forever restart app.js",
+    "stop": "forever stop app.js"
+  },
+  "author": "Evgeny Korolev",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.2",
+    "cookie-parser": "^1.4.1",
+    "ejs-locals": "^1.0.2",
+    "express": "^4.13.3",
+    "express-session": "^1.13.0",
+    "forever": "^0.15.1",
+    "mongoose": "^4.3.5",
+    "node-jsdom": "^3.1.5",
+    "redis": "^2.4.2"
+  },
+  "devDependencies": {}
+}
