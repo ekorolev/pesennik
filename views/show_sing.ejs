@@ -15,37 +15,46 @@
   <% } else { %>
     <a href='/sing/copy/<%=sing._id%>'>Скопировать эту песню себе</a>
   <% } %>
-  <div>
+  <div class="js-autoscroll">
     <span>Автопрокрутка: </span>
-    <a class="js-autoroll-faster" href="#">| + |</a>&nbsp;&nbsp;&nbsp;
-    <a class="js-autoroll-slower" href="#">| - |</a>
+    | speed: <span class="js-autoscroll-velocity">0</span> |&nbsp;&nbsp;
+    <a class="js-autoroll-faster" href="#">| + |</a>&nbsp;&nbsp;
+    <a class="js-autoroll-slower" href="#">| - |</a>&nbsp;&nbsp;
+    <a class="js-autoroll-stop" href="#">| STOP |</a>&nbsp;&nbsp;
+    <a class="js-autoroll-pause" href="#">| PAUSE |</a>
     <script type="text/javascript">
       $(function() {
         var $fasterBtn = $('.js-autoroll-faster'),
             $slowerBtn = $('.js-autoroll-slower'),
-            rollVelocity = 0, lastRollVelocity = 0;
+            $stopBtn = $('.js-autoroll-stop'),
+            $pauseBtn = $('.js-autoroll-pause'),
+            $velocity = $('.js-autoscroll-velocity');
+            rollVelocity = 0, step = 0, speed = 7, pause = false;
         
         rollVelocity = 0;
         setInterval(function() {
-          $('html, body').stop();
-          if (rollVelocity > 0) {
-             $('html, body').animate({
-              scrollTop: $(document).scrollTop() + rollVelocity * 3
-            }, 1050, 'linear');
-          }
-        }, 1000);
-        $('body').on('click', function() {
-          $('html, body').stop();
+          step += rollVelocity/speed;
+          if (!pause) $(document).scrollTop($(document).scrollTop() + Math.floor(step));
+          step = step % 1;
+        }, 30);
+        $stopBtn.on('click', function() {
           rollVelocity = 0;
+          $velocity.html(rollVelocity);
+          return false;
+        });
+        $pauseBtn.on('click', function() {
+          pause = !pause;
+          $pauseBtn.html(pause ? '| RESUME |' : '| PAUSE |')
+          return false;
         });
         $fasterBtn.on('click', function(event) {
-          if (rollVelocity < 10) ++rollVelocity;
-          event.stopPropagation();
+          if (rollVelocity < 5) ++rollVelocity;
+          $velocity.html(rollVelocity);
           return false;
         });
         $slowerBtn.on('click', function(event) {
           if (rollVelocity > 0) --rollVelocity;
-          event.stopPropagation();
+          $velocity.html(rollVelocity);
           return false;
         });
       });
