@@ -1,4 +1,4 @@
-<%layout('layout')%>
+<% layout('layout')%>
 
 <form role='form' action='/sing/update/<%=sing._id%>' method='POST'>
 	<div class='form-group'>
@@ -10,16 +10,8 @@
 		<input type='text' name="name" id='nameOfSing' class='form-control' value='<%=sing.name%>'>
 	</div>
 	<div class='form-group'>
-		<script type="text/javascript">
-			function toggleEditor() {
-				$('textarea').toggleClass('tinymce');
-			}
-		</script>
-		<button class='btn btn-default' on-click="toggleEditor()">Не использовать редактор</button>
-	</div>
-	<div class='form-group'>
 		<label for='text'>Текст произведения</label>
-		<textarea name="text" id='text' class='form-control tinymce' style='height: 200px;'><%=sing.text%></textarea>
+		<textarea name="text" id='text' class='form-control tinymce' style='height: 200px;'><%-sing.text%></textarea>
 	</div>
 	<button type="submit" class="btn btn-default">Изменить песню</button>
 </form>

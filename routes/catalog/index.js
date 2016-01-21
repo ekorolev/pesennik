@@ -2,6 +2,39 @@ var async = require('async');
 var request = require('request');
 var jsdom = require('node-jsdom');
 
+function escapeHtml(text) {
+  return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
+function reEscapeHtml(text) {
+  return text
+      .replace(/\&amp\;/g, "&")
+      .replace(/\&lt\;/g, "<")
+      .replace(/\&gt\;/g, ">")
+      .replace(/\&quot\;/g, '"')
+      .replace(/\&#039\;/g, "'");	
+}
+
+function isEscapeHtml(text) {
+	var b1 = text.indexOf('&lt;')+1;
+	var b2 = text.indexOf('&gt;')+1;
+	var b3 = text.indexOf('&quot;')+1;
+	var b4 = text.indexOf('&amp;')+1;
+	var b5 = text.indexOf('&#039;')+1;
+	return b1||b2||b3||b4||b5;
+}
+
+function deleteScript(text) {
+	return text
+		.replace(/<script/g, "")
+		.replace(/&lt;script/g, "");
+}
+
 var gettingCreateSingFunction = function (opts) {
 	var Authors = opts.models.authors;
 	var Users = opts.models.users;
@@ -39,6 +72,9 @@ var gettingCreateSingFunction = function (opts) {
 			}
 		}, function (err, results) {
 			if (err) callback(err); else {
+
+				text = deleteScript(text);
+
 				var sing = new Sings({
 					name: name,
 					author: results.author.name,
@@ -155,6 +191,7 @@ module.exports = function (opts) {
 					sing_id: id
 				}).sort({addTime: -1});
 				query.exec(function (err, comments) {
+					console.log('show:', sing.text);
 					res.render('show_sing', {
 						sing: sing,
 						comments: comments
@@ -194,6 +231,8 @@ module.exports = function (opts) {
 					if (sing.user_id!=req.user._id.toString()) {
 						res.send('you are not the owner of song')
 					} else {
+						//sing.text = reEscapeHtml(sing.text);
+						console.log('edit: ', sing.text);
 						res.render('edit_sing', {
 							sing: sing
 						});
@@ -214,6 +253,7 @@ module.exports = function (opts) {
 
 						sing.name = req.body.name;
 						sing.text = req.body.text;
+
 						sing.save(function (err, sing) {
 							if (err) res.send('error #012'); else {
 								res.redirect('/sing/show/'+sing._id.toString());
