@@ -15,7 +15,7 @@ var prepareGetSingFromAMDM = function ( opts ) {
 						if (errors) {
 							callback(new Error(errors));
 						} else {
-							var text = window.$('pre').text();
+							var text = window.$('pre').html();
 							var artist = window.$('span[itemprop=byArtist]').text();
 							var name = window.$('span[itemprop=name]').text();
 							callback(null, {
