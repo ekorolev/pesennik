@@ -7,15 +7,28 @@
 	<script src="/bootstrap/js/jquery.min.js"></script>
 	<script src="/bootstrap/js/bootstrap.min.js"></script>	
 	<script src="/nicEdit/nicEdit.js"></script>
+	<%-scripts%>
 	<script type="text/javascript">
 //<![CDATA[
         bkLib.onDomLoaded(function() { 
         	new nicEditor({
         		iconsPath: '/nicEdit/nicEditorIcons.gif'
-        	}).panelInstance('text');
+        	}).panelInstance('text1');
         });
   //]]>
   </script>
+  	<script type="text/javascript" src="/tinymce/tinymce.min.js"></script>
+  	<script type="text/javascript">
+  		window.tinymce = tinymce;
+
+  		window.songText = tinymce.createEditor("songText", {
+  			selector: "#text"
+  		});
+
+  		tinymce.init({
+  			selector: "#text"
+  		});
+  	</script>
 </head>
 <body>
 <% if (!user) { %>

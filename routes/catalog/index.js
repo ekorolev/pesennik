@@ -108,7 +108,14 @@ var prepareGetSingFromAMDM = function ( opts ) {
 						if (errors) {
 							callback(new Error(errors));
 						} else {
-							callback(null, window.$('pre').text());
+							var text = window.$('pre').text();
+							var artist = window.$('span[itemprop=byArtist]').text();
+							var name = window.$('span[itemprop=name]').text();
+							callback(null, {
+								text: text,
+								artist: artist,
+								name: name
+							});
 						}
 					}
 				});				
@@ -128,17 +135,21 @@ module.exports = function (opts) {
 	var createSing = gettingCreateSingFunction(opts);
 	var getSingFromAMDM = prepareGetSingFromAMDM(opts);
 
+	// json-requests:
+	var json = require('./json');
+	json(opts);
+
 	app.get('/sing/new', function (req, res) { res.render('new_sing')});
 
 	// Создание новой песенки
 	app.post('/sing/create', function (req, res) {
-		if (req.body.copylink) {
-			getSingFromAMDM(req.body.copylink, function (err, text) {
+		if (req.body.copylink && !req.body.text) {
+			getSingFromAMDM(req.body.copylink, function (err, data) {
 				if (err) res.send('error #070'); else {
 					createSing({
 						author: req.body.author,
 						name: req.body.name,
-						text: text,
+						text: data.text,
 						user: req.user,
 						copylink: req.body.copylink
 					}, function (err, sing) {
