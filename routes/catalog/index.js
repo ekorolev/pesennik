@@ -164,6 +164,7 @@ module.exports = function (opts) {
 				author: req.body.author,
 				name: req.body.name,
 				text: req.body.text,
+				copylink: req.body.copylink,
 				user: req.user
 			}, function (err, sing) {
 				if (err) res.send('error #050'); else {

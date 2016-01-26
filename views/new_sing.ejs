@@ -2,13 +2,8 @@
 <%script('/appjs/import.js')%>
 
 <form role='form' action='/sing/create' method='POST'>
-	<div class='form-group'>
-		<label for='authorOfSing'>Автор песни</label>
-		<input type='text' name="author" id='authorOfSing' class='form-control' >
-	</div>
-	<div class='form-group'>
-		<label for='nameOfSing'>Название песни</label>
-		<input type='text' name="name" id='nameOfSing' class='form-control' >
+	<div class='alert alert-info'>
+		Вы можете добавить ссылку на amdm.ru и импортировать песню, а можете заполнить все своими руками
 	</div>
 	<div class='form-group'>
 		<label for='link'>Ссылка на <a href='http://amdm.ru' target='blank'>amdm.ru</a>, где расположена песня. Текст будет скопирован оттуда.</label>
@@ -21,6 +16,14 @@
 				<label for='link' class='' id="Alert" style='display: none'></span>
 			</div>		
 		</div>
+	</div>
+	<div class='form-group'>
+		<label for='authorOfSing'>Автор песни</label>
+		<input type='text' name="author" id='authorOfSing' class='form-control' >
+	</div>
+	<div class='form-group'>
+		<label for='nameOfSing'>Название песни</label>
+		<input type='text' name="name" id='nameOfSing' class='form-control' >
 	</div>
 	<input type='hidden' name="copylink" id="copylink">
 	<div class='form-group'>
