@@ -14,29 +14,32 @@ $(function () {
 			'song/:id': 'view'
 		},
 		index: function () {
-			$(document.body).append("Index route has been called...");
+			//$(document.body).append("Index route has been called...");
 		},
 		list: function (id) {
-			$(document.body).append("List route has been called....");
+			//$(document.body).append("List route has been called....");
 		},
 		view: function (id) {
-			$(document.body).append("View song with id: "+id);
+			//$(document.body).append("View song with id: "+id);
 		}
 	});
 
-	var MainView = Backbone.View.extend({
+	var AuthView = Backbone.View.extend({
 		initialize: function(){
 			this.render();
 		},
 		render: function(){
-			// Compile the template using underscore
-			var template = _.template( $("#search_template").html(), {} );
-			// Load the compiled HTML into the Backbone "el"
-			this.$el.html( template );
+			if (!window.User) {
+				var template = _.template( $("#auth_template").html(), {} );
+				this.$el.html( template );			
+			} else {
+				var template = _.template( $("#personal_template").html(), {} );
+				this.$el.html( template );					
+			}
 		}
 	});
 
-	App.Views.Main = new MainView({ el: $("#Main") });
+	App.Views.Auth = new AuthView({ el: $("#Auth") });
 	new App.Router;
 	Backbone.history.start();
 

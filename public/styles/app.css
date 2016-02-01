@@ -1,0 +1,26 @@
+#Logo {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 20px;
+	line-height: 20px;
+	font-weight: bold;
+	letter-spacing: 5px;
+}
+
+#Main {
+	margin-top: 20px;
+}
+
+#Menu {
+	margin-top: 20px;
+}
+
+#Footer {
+	margin-top: 20px;
+}
+
+.ps-block {
+	border: 1px solid #5bc0de;
+	padding: 10px;
+	border-radius: 10px;
+}
