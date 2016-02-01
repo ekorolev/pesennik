@@ -24,6 +24,19 @@ $(function () {
 		}
 	});
 
+	var MainView = Backbone.View.extend({
+		initialize: function(){
+			this.render();
+		},
+		render: function(){
+			// Compile the template using underscore
+			var template = _.template( $("#search_template").html(), {} );
+			// Load the compiled HTML into the Backbone "el"
+			this.$el.html( template );
+		}
+	});
+
+	App.Views.Main = new MainView({ el: $("#Main") });
 	new App.Router;
 	Backbone.history.start();
 
