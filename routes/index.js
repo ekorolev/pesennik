@@ -8,7 +8,9 @@ module.exports = function (opts) {
 	var middlewares = require('./middlewares');
 	var users = require('./users');
 	var catalog = require('./catalog');
+	var api = require('./api');
 	middlewares(opts);
 	users(opts);
 	catalog(opts);
+	api(opts);
 }
