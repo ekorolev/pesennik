@@ -43,11 +43,9 @@ var opts = {
 };
 routes(opts);
 
-app.get('/', function (req, res) { 
-	res.sendFile(__dirname+'/public/index.html');
-});
+//app.get('/', function (req, res) { res.sendFile(__dirname+'/public/index.html'); });
 
-app.get('/alt', function (req, res) {
+app.get('/', function (req, res) {
 	if (req.session.userId) {
 		res.redirect('/catalog/'+req.session.userId);
 	} else {
