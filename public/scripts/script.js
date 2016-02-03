@@ -1,6 +1,7 @@
 var App = angular.module('App', [
 	'ngRoute',
-	'ngCookies'
+	'ngCookies',
+	'ngSanitize'
 ]);
 
 App.config(['$routeProvider', 
@@ -12,6 +13,7 @@ App.config(['$routeProvider',
 			when('/list', { templateUrl: '/templates/list.html', controller: 'listController' }).
 			when('/list/:id', { templateUrl: '/templates/list.html', controller:'listController'}).
 			when('/song/:id', {templateUrl: '/templates/song.html', controller: 'songController'}).
+			when('/create', {templateUrl: '/templates/create.html', controller: 'createController'}).
 			otherwise({
 				redirectTo: '/'
 			});
@@ -74,6 +76,19 @@ App.controller('MainController', ['$scope', '$rootScope', '$http',
 		$root.loadingOff = function () {
 			$root.loading = false;
 		}
+
+		$root.deleteSong = function (id, list, index) {
+			$http.get('/api/deletesong/'+id).
+			then(function (response) {
+				if (response.data.success) {
+					if (list && index) {
+						list.splice(index, 1);
+					}
+				}
+			}, function () {
+				console.log('error');
+			});
+		}
 	}
 
 
@@ -111,5 +126,48 @@ App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams
 		}, function () {
 			console.log('error');
 		});
+	}
+]);
+
+App.controller('createController', ['$scope', '$rootScope', '$http', '$location',
+	function ($scope, $root, $http, $location) {
+		window.tinymce.init({
+			selector: '#text'
+		});
+		$scope.song = {};
+
+		$scope.create = function () {
+			$scope.song.text = window.tinymce.activeEditor.getContent();
+			$http.post('/api/create', $scope.song).
+			then( function (response) {
+				if (response.data.success) {
+					$location.path('/song/'+response.data.song._id);
+				} else {
+
+				}
+			}, function () {
+
+			});
+			return false;
+		}
+
+		$scope.import = function () {
+			$http.post('/api/import', {
+				link: $scope.importlink
+			}).
+			then( function (response) {
+				console.log(response.data);
+				if (response.data.success) {
+					$scope.song.author = response.data.author;
+					$scope.song.name = response.data.name;
+					window.tinymce.activeEditor.setContent('<pre>'+response.data.text+'</pre>');
+				} else {
+
+				}
+			}, function () {
+				console.log('/api/import error');
+			})
+			return false;
+		}
 	}
 ]);

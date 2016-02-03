@@ -9,7 +9,9 @@
 	<script type="text/javascript" src="/scripts/angular.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular-cookies.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular-route.min.js"></script>
+	<script type="text/javascript" src="/scripts/angular-sanitize.min.js"></script>
 	<script type="text/javascript" src="/scripts/script.js"></script>
+  	<script type="text/javascript" src="/tinymce/tinymce.min.js"></script>
 </head>
 <body>
 
@@ -69,13 +71,16 @@
 						<li>
 							<a href='#/list'>Каталог</a>
 						</li>
+						<li>
+							<a href='#/create'>Добавить песню</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 
 
 			<div class="col-md-7">
-				<div class='ps-block' ng-view>
+				<div ng-view>
 					empty block
 				</div>
 			</div>

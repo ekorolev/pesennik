@@ -1,3 +1,4 @@
-<h1>{{song.name}} <small>{{song.author}}</small></h1>
-
-<pre>{{song.text}}</pre>
+<div id="Song">
+	<span class='name'>{{song.name}} <small>{{song.author}}</small></span>
+	<div ng-bind-html="song.text"></div>
+</div>	
