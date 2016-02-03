@@ -77,7 +77,8 @@ module.exports = function (opts) {
 									success: true,
 									result: {
 										user: {
-											login: user.login
+											login: user.login,
+											id: user._id.toString()
 										}
 									}
 								});
@@ -96,7 +97,8 @@ module.exports = function (opts) {
 			res.send({
 				auth: true,
 				user: {
-					login: user.login
+					login: user.login,
+					id: user._id.toString()
 				}
 			});
 		} else {
