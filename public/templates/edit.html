@@ -1,0 +1,16 @@
+<form role='form'>
+	<div class='form-group'>
+		<label for='authorOfSing'>Автор песни</label>
+		<input type='text' name="author" id='authorOfSing' class='form-control' ng-model="song.author">
+	</div>
+	<div class='form-group'>
+		<label for='nameOfSing'>Название песни</label>
+		<input type='text' name="name" id='nameOfSing' class='form-control' ng-model="song.name">
+	</div>
+	<input type='hidden' name="copylink" id="copylink" ng-model="song.copylink">
+	<div class='form-group'>
+		<label for='text'>Текст произведения</label>
+		<textarea name="text" id='text' class='form-control tinymce' style='height: 200px;' ng-model="song.text"></textarea>
+	</div>
+	<button type="submit" class="btn btn-default" ng-click='update()'>Изменить песню</button>
+</form>

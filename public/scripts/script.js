@@ -14,6 +14,8 @@ App.config(['$routeProvider',
 			when('/list/:id', { templateUrl: '/templates/list.html', controller:'listController'}).
 			when('/song/:id', {templateUrl: '/templates/song.html', controller: 'songController'}).
 			when('/create', {templateUrl: '/templates/create.html', controller: 'createController'}).
+			when('/song/:id/edit', {templateUrl: '/templates/edit.html', controller: 'editController'}).
+			when('/users', {templateUrl: '/templates/users.html', controller: 'usersListController'}).
 			otherwise({
 				redirectTo: '/'
 			});
@@ -82,11 +84,14 @@ App.controller('MainController', ['$scope', '$rootScope', '$http',
 
 ]);
 
-App.controller('listController', ['$scope', '$rootScope', '$http', 
-	function ($scope, $root, $http) {
+App.controller('listController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
+	function ($scope, $root, $http, $location, $params) {
 		$scope.authors = {};
-		
-		$http.get('/api/list').
+		$scope.owner_id = $params.id;
+		var url;
+		if ($scope.owner_id) url = '/api/list/'+$scope.owner_id; else url='/api/list';
+
+		$http.get(url).
 		then(function (response){
 			console.log(response.data);
 
@@ -117,19 +122,70 @@ App.controller('listController', ['$scope', '$rootScope', '$http',
 				console.log('error');
 			});
 		}
+
+		$scope.edit = function (song) {
+			$root.editSong = song;
+			$location.path('/song/'+song._id+'/edit');
+		}
 	}
 ]);
 
-App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams',
+App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams', '$location',
 	function ($scope, $root, $http, $params) {
 		$scope.song = {};
 
 		$http.get('/api/song/'+$params.id).
 		then(function (response) {
-			$scope.song = response.data.sing;
+			$scope.song = response.data.song;
 		}, function () {
 			console.log('error');
 		});
+
+		$scope.delete = function () {
+			$http.get('/api/deletesong/'+$scope.song._id).
+			then( function (response) {
+				$scope.deleteOK = true;
+			});
+		}
+	}
+]);
+
+App.controller('editController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
+	function ($scope, $root, $http, $location, $params) {
+		window.tinymce.remove('#text');
+		window.tinymce.init({
+			selector: '#text'
+		});
+		
+
+		if (!$root.editSong) {
+			$http.get('/api/song/'+$params.id).
+			then( function (response) {
+				$scope.song = response.data.song;
+				if (window.tinymce.activeEditor) {
+					window.tinymce.activeEditor.setContent(response.data.song.text);
+				}
+			});
+		} else {
+			$scope.song = $root.editSong;
+			if (window.tinymce.activeEditor) {
+				window.tinymce.activeEditor.setContent($scope.song.text);
+			}
+		}
+
+		$scope.update = function () {
+			$scope.song.text = window.tinymce.activeEditor.getContent();
+			$http.post('/api/updatesong/'+$scope.song._id, $scope.song).
+			then( function (response) {
+				if (response.data.success) {
+					$location.path('/song/'+response.data.song._id);
+				} else {
+					console.log(response.data);
+				}
+			}, function () {
+
+			});
+		}
 	}
 ]);
 
@@ -174,5 +230,20 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 			})
 			return false;
 		}
+	}
+]);
+
+App.controller('usersListController', ['$scope', '$rootScope', '$http', 
+	function ($scope, $rootScope, $http) {
+		$scope.users = [];
+
+		$http.get('/api/users').
+		then(function (response) {
+			if (response.data.success) {
+				$scope.users = response.data.users;
+			}
+		}, function () {
+			console.log('error');
+		});
 	}
 ]);

@@ -5,8 +5,8 @@
 			<div style='display: inline-block'>
 				<a href='#/song/{{song._id}}'>{{song.author}} - {{song.name}}</a>
 			</div>
-			<div style="display: inline-block; float: right;" ng-if='$root.auth'>
-				<a href='/sing/edit/{{song._id}}'><span class='glyphicon glyphicon-pencil'></span></a> 
+			<div style="display: inline-block; float: right;" ng-if='$root.auth && $root.user._id==song.user_id'>
+				<a ng-click='edit(song)'><span class='glyphicon glyphicon-pencil'></span></a> 
 				<a ng-click='delete(song._id, authors, index, second_index)'><span class='glyphicon glyphicon-remove'></span></a> 
 			</div>
 		</li>

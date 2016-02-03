@@ -27,5 +27,5 @@ a { cursor: pointer; }
 	border-radius: 10px;
 }
 
-#Song .name { font-size: 25px; margin-bottom: 10px; display: block;}
+#Song .name { font-size: 25px; display: block;}
 #Song .name small { font-size: 18px; color: gray;}

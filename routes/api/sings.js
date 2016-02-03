@@ -105,18 +105,21 @@ module.exports = function (opts) {
 	var createSing = gettingCreateSingFunction(opts);
 
 
-	app.get('/api/list', function (req, res) {
-		var id = req.user._id;
+	var list_func = function (req, res) {
+		var id = req.params.id || req.user._id;
 		Sings.find({
 			user_id: id.toString()
 		}, function (err, sings) {
 			res.send({
 				error: err? err : null,
 				success: err? false : true,
-				sings: sings
+				sings: sings,
+				owner_id: id
 			});
-		})
-	});
+		})		
+	}
+	app.get('/api/list/:id', list_func);
+	app.get('/api/list', list_func);
 
 	app.get('/api/song/:id', function (req, res) {
 		var id = req.params.id;
@@ -124,7 +127,7 @@ module.exports = function (opts) {
 			res.send({
 				error: err? err : null,
 				success: err? false: true,
-				sing: sing
+				song: sing
 			});
 		});
 	});
@@ -186,6 +189,31 @@ module.exports = function (opts) {
 								success: true
 							})
 						});
+					}
+				}
+			}
+		})
+	});
+
+	app.post('/api/updatesong/:id', function (req, res) {
+		var id = req.params.id;
+		Sings.findById(id, function (err, sing) {
+			if (err) res.send({error:err}); else {
+				if (!sing) res.send({error: 'sing is not found'}); else {
+					if (sing.user_id!=req.user._id.toString()) {
+						res.send({error:'you are not the owner of song'})
+					} else {
+
+						sing.name = req.body.name;
+						sing.text = req.body.text;
+
+						sing.save(function (err, sing) {
+							res.send({
+								error: err ? err : null,
+								success: err ? false : true,
+								song: sing
+							});
+						})
 					}
 				}
 			}
