@@ -100,6 +100,7 @@ var gettingCreateSingFunction = function (opts) {
 module.exports = function (opts) {
 	var app = opts.app;
 	var Sings = opts.models.sings;
+	var Users = opts.models.users;
 	var getSingFromAMDM = prepareGetSingFromAMDM(opts);
 	var createSing = gettingCreateSingFunction(opts);
 

@@ -77,18 +77,6 @@ App.controller('MainController', ['$scope', '$rootScope', '$http',
 			$root.loading = false;
 		}
 
-		$root.deleteSong = function (id, list, index) {
-			$http.get('/api/deletesong/'+id).
-			then(function (response) {
-				if (response.data.success) {
-					if (list && index) {
-						list.splice(index, 1);
-					}
-				}
-			}, function () {
-				console.log('error');
-			});
-		}
 	}
 
 
@@ -113,6 +101,22 @@ App.controller('listController', ['$scope', '$rootScope', '$http',
 		}, function () {
 			console.log('error');
 		});
+
+		$scope.delete = function (id, array, first_index, second_index) {
+			console.log(id);
+			$http.get('/api/deletesong/'+id).
+			then(function (response) {
+				console.log(response);
+				if (response.data.success) {
+					array[first_index].splice(second_index, 1);
+					if (array[first_index].length==0) {
+						delete array[first_index];
+					}
+				}
+			}, function () {
+				console.log('error');
+			});
+		}
 	}
 ]);
 
@@ -131,6 +135,7 @@ App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams
 
 App.controller('createController', ['$scope', '$rootScope', '$http', '$location',
 	function ($scope, $root, $http, $location) {
+		window.tinymce.remove('#text');
 		window.tinymce.init({
 			selector: '#text'
 		});

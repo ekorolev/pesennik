@@ -25,7 +25,7 @@
 	<input type='hidden' name="copylink" id="copylink" ng-model="song.copylink">
 	<div class='form-group'>
 		<label for='text'>Текст произведения</label>
-		<textarea name="text" id='text' class='form-control tinymce' style='height: 200px;' ng-model="$scope.song.text"></textarea>
+		<textarea name="text" id='text' class='form-control tinymce' style='height: 200px;' ng-model="song.text"></textarea>
 	</div>
 	<button type="submit" class="btn btn-default" ng-click='create()'>Добавить песню</button>
 </form>
