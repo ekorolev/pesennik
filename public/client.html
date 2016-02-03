@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html ng-app="App" ng-controller="MainController">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<head>
+	<title>Личный песенник</title>
+
+	<link rel='stylesheet' type='text/css' href='/bootstrap/css/bootstrap.min.css'>
+	<link rel='stylesheet' type='text/css' href='/styles/app.css'>
+	<script type="text/javascript" src="/scripts/angular.min.js"></script>
+	<script type="text/javascript" src="/scripts/angular-cookies.min.js"></script>
+	<script type="text/javascript" src="/scripts/angular-route.min.js"></script>
+	<script type="text/javascript" src="/scripts/script.js"></script>
+</head>
+<body>
+
+	<div class='container-fluid bg-primary' id="Head">
+		<div class='row'>
+			<div class='col-md-3 col-md-offset-1'>
+				<div id="Logo">
+					<span>Песенник</span>
+				</div>
+			</div>
+			<div class='col-md-7'>
+			</div>
+		</div>
+	</div>
+	<div class='container-fluid' id="Main">
+		<div class="row">
+			<div class='col-md-1'>
+				<div class='text-center' ng-if='$root.loading'>
+					<img src="/images/loading.gif">
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class='ps-block' id="Auth" ng-controller="authController">
+					<div class='authform' ng-if="!$root.auth">
+						<form role='form'>
+							<div class='form-group'>
+								<input ng-model='form.login' type='text' name='login' placeholder="Логин" class='form-control'>
+							</div>
+							<div class='form-group'>
+								<input type='password' ng-model='form.password' name='password' placeholder="Пароль" class='form-control'>
+							</div>
+							<div class='form-group'>
+								<div class='col-sm-6'>
+									<ul class='list-unstyled'>
+										<li><small><a href='#'>Регистрация</a></small></li>
+									</ul>
+								</div>
+								<div class='col-sm-6'>
+									<input type='submit' ng-click="signin()" value="Войти" class='form-control'>
+								</div>
+							</div>
+						</form>
+						<div class='clearfix'></div>
+					</div>
+
+					<div class='personal-block' ng-if='$root.auth'>
+						<b>{{$root.user.login}}</b>
+						<span class='glyphicon glyphicon-log-out' ng-click='signout()'></span>	
+					</div>
+				</div>
+				<div class='clearfix'></div>
+				<div class='ps-block' id="Menu">
+					<ul class='nav nav-pills nav-stacked'>
+						<li>
+							<a href='#/'>Главная</a>
+						</li>
+						<li>
+							<a href='#/list'>Каталог</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="col-md-7">
+				<div class='ps-block' ng-view>
+					empty block
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class='container-fluid' id="Footer">
+		<div class='row'>
+			<div class='col-md-offset-4 col-md-7'>
+				<p class='text-muted'>
+					По всем вопросам: <strong><a href='http://vk.com/ea_korolev' target="blank" class='text-muted'>vk.com/ea_korolev</a></strong>
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

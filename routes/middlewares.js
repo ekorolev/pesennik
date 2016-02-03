@@ -35,5 +35,7 @@ module.exports = function (opts) {
 		}
 	});
 
+	//app.use(function (req, res, next) {setTimeout(function () {next()}, 300);});
+
 
 }
