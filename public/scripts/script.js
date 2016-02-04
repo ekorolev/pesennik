@@ -137,6 +137,12 @@ App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams
 		$http.get('/api/song/'+$params.id).
 		then(function (response) {
 			$scope.song = response.data.song;
+			var indexBeginPre = $scope.song.text.indexOf('<pre>');
+			if (indexBeginPre!=0) {
+				$scope.song.text = $scope.song.text.split('<pre>').join('');
+				$scope.song.text = $scope.song.text.split('</pre>').join('');
+				$scope.song.text = '<pre>'+$scope.song.text+'</pre>';
+			}
 		}, function () {
 			console.log('error');
 		});
