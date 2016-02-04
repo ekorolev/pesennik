@@ -59,6 +59,12 @@ module.exports = function (opts) {
 							req.session.userId = user._id.toString();
 							res.send({
 								success: true,
+								result: {
+									user: {
+										login: user.login,
+										id: user._id.toString()
+									}
+								},
 								redirect: 'addinfo'
 							})
 						}

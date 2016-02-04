@@ -35,6 +35,9 @@
 			</div>
 			<div class="col-md-3">
 				<div class='ps-block' id="Auth" ng-controller="authController">
+					<div class='alert alert-danger' ng-if='!!errorMessage'>
+						{{errorMessage}}
+					</div>
 					<div class='authform' ng-if="!$root.auth">
 						<form role='form'>
 							<div class='form-group'>
@@ -44,17 +47,18 @@
 								<input type='password' ng-model='form.password' name='password' placeholder="Пароль" class='form-control'>
 							</div>
 							<div class='form-group'>
-								<div class='col-sm-6'>
-									<ul class='list-unstyled'>
-										<li><small><a href='#/signup'>Регистрация</a></small></li>
-									</ul>
-								</div>
-								<div class='col-sm-6'>
-									<input type='submit' ng-click="signin()" value="Войти" class='form-control'>
+								<div class='row'>
+									<div class='col-sm-6'>
+										<ul class='list-unstyled'>
+											<li><small><a href='#/signup'>Регистрация</a></small></li>
+										</ul>
+									</div>
+									<div class='col-sm-6'>
+										<input type='submit' ng-click="signin()" value="Войти" class='form-control'>
+									</div>
 								</div>
 							</div>
 						</form>
-						<div class='clearfix'></div>
 					</div>
 
 					<div class='personal-block' ng-if='$root.auth'>

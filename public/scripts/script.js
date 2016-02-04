@@ -27,8 +27,8 @@ App.controller('indexController', ['$rootScope', '$location',
 		} 
 	}
 ]);
-App.controller('authController', ['$scope', '$rootScope', '$http', 
-	function ($scope, $root, $http) {
+App.controller('authController', ['$scope', '$rootScope', '$http', '$location',
+	function ($scope, $root, $http, $location) {
 		$scope.form = {};
 
 		if (!$root.auth) {
@@ -43,9 +43,21 @@ App.controller('authController', ['$scope', '$rootScope', '$http',
 				login: $scope.form.login,
 				password: $scope.form.password
 			}).then(function (response) {
-				console.log(response);
-				$root.user = response.data.result.user;
-				$root.auth = true;
+				if (response.data.success) {
+					$root.user = response.data.result.user;
+					$root.auth = true;
+					$location.path('/list');	
+				} else {
+					$scope.errorMessage = "Ошибка входа";
+					if (response.data.error="invalid_password") {
+						$scope.errorMessage = "Неправильный пароль";
+					}					
+
+					setTimeout(function () {
+						$scope.errorMessage = "";
+					}, 300);
+				}
+				
 			}, function () {
 				console.log('error');
 			});
