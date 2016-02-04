@@ -199,15 +199,17 @@ module.exports = function (opts) {
 		var id = req.params.id;
 		Sings.findById(id, function (err, sing) {
 			if (err) res.send('error #008'); else {
-				var query = Comments.find({
-					sing_id: id
-				}).sort({addTime: -1});
-				query.exec(function (err, comments) {
-					res.render('show_sing', {
-						sing: sing,
-						comments: comments
-					});					
-				})
+				if (!sing) { res.send("Song is not found!"); } else {
+					var query = Comments.find({
+						sing_id: id
+					}).sort({addTime: -1});
+					query.exec(function (err, comments) {
+						res.render('show_sing', {
+							sing: sing,
+							comments: comments
+						});					
+					})					
+				}
 			}
 		})
 	});
