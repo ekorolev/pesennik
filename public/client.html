@@ -46,7 +46,7 @@
 							<div class='form-group'>
 								<div class='col-sm-6'>
 									<ul class='list-unstyled'>
-										<li><small><a href='#'>Регистрация</a></small></li>
+										<li><small><a href='#/signup'>Регистрация</a></small></li>
 									</ul>
 								</div>
 								<div class='col-sm-6'>
@@ -65,10 +65,10 @@
 				<div class='clearfix'></div>
 				<div class='ps-block' id="Menu">
 					<ul class='nav nav-pills nav-stacked'>
-						<li>
-							<a href='#/list'>Каталог</a>
+						<li ng-if="!!$root.auth">
+							<a href='#/list'>Мой Каталог</a>
 						</li>
-						<li>
+						<li ng-if='!!$root.auth'>
 							<a href='#/create'>Добавить песню</a>
 						</li>
 						<li>
@@ -91,7 +91,8 @@
 		<div class='row'>
 			<div class='col-md-offset-4 col-md-7'>
 				<p class='text-muted'>
-					По всем вопросам: <strong><a href='http://vk.com/ea_korolev' target="blank" class='text-muted'>vk.com/ea_korolev</a></strong>
+					Чтобы использовать старую версию сайта, нажмите <b><a href='/switch_version' class='text-muted'>сюда</a></b><br>
+					По всем вопросам: <strong><a href='http://vk.com/ea_korolev' target="blank" class='text-muted'>vk.com/ea_korolev</a></strong><br>
 				</p>
 			</div>
 		</div>

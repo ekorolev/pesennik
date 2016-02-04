@@ -11,7 +11,8 @@ module.exports = function (mongoose) {
 		admin: Boolean,
 		singCount: { type: Number, default: 0 },
 		lastActivity: Date,
-		role: String
+		role: String,
+		useOld: Boolean
 	});
 
 	Schema.methods.secureInfo = function () {

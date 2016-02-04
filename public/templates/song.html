@@ -2,7 +2,10 @@
 	<div class='alert alert-success' ng-if='deleteOK'>Песня удалена</div>
 	<span class='name'>{{song.name}} <small>{{song.author}}</small></span>
 	<small>Из <a href='#/list/{{song.user_id}}'>каталога</a> пользователя <b>{{song.user}}</b></small>
-	<ul class='list-unstyled' ng-if='$root.user._id==$song.user_id'>
+	<div ng-if='!!song.copylink'>
+		Импортировано: <a href='{{song.copylink}}' target="blank">{{song.copylink}}</a>
+	</div>
+	<ul class='list-unstyled' ng-if='$root.user._id==$song.user_id && $root.auth'>
 		<li><a href='#/song/{{song._id}}/edit'>Редактировать</a></li>
 		<li><a ng-click='delete()'>Удалить</a>
 	</ul>

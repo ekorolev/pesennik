@@ -1,6 +1,7 @@
 <ul class='list-unstyled'>
 	<li ng-repeat="user in users">
 		<b>{{user.login}}</b> | 
-		<a href='#/list/{{user._id}}'>Каталог</a>
+		<a href='#/list/{{user._id}}'>Каталог</a> 
+		<small>(<b>{{user.singCount}}</b> песен в каталоге)</small>
 	</li>
 </ul>

@@ -7,21 +7,26 @@ var App = angular.module('App', [
 App.config(['$routeProvider', 
 	function ($routeProvider) {
 		$routeProvider.
-			when('/', {
-				templateUrl: '/templates/index.html'
-			}).
+			when('/', {templateUrl: '/templates/index.html', controller: 'indexController'}).
 			when('/list', { templateUrl: '/templates/list.html', controller: 'listController' }).
 			when('/list/:id', { templateUrl: '/templates/list.html', controller:'listController'}).
 			when('/song/:id', {templateUrl: '/templates/song.html', controller: 'songController'}).
 			when('/create', {templateUrl: '/templates/create.html', controller: 'createController'}).
 			when('/song/:id/edit', {templateUrl: '/templates/edit.html', controller: 'editController'}).
 			when('/users', {templateUrl: '/templates/users.html', controller: 'usersListController'}).
+			when('/signup', {templateUrl:'/templates/signup.html'}).
 			otherwise({
 				redirectTo: '/'
 			});
 	}
 ]);
-
+App.controller('indexController', ['$rootScope', '$location',
+	function ($root, $location) {
+		if ($root.auth) {
+			$location.path('/list');
+		} 
+	}
+]);
 App.controller('authController', ['$scope', '$rootScope', '$http', 
 	function ($scope, $root, $http) {
 		$scope.form = {};
@@ -79,6 +84,10 @@ App.controller('MainController', ['$scope', '$rootScope', '$http',
 			$root.loading = false;
 		}
 
+
+		if (!$root.auth) {
+			console.log('you are not auth!');
+		}
 	}
 
 
@@ -88,6 +97,7 @@ App.controller('listController', ['$scope', '$rootScope', '$http', '$location', 
 	function ($scope, $root, $http, $location, $params) {
 		$scope.authors = {};
 		$scope.owner_id = $params.id;
+		$scope.songs = [];
 		var url;
 		if ($scope.owner_id) url = '/api/list/'+$scope.owner_id; else url='/api/list';
 
@@ -97,6 +107,7 @@ App.controller('listController', ['$scope', '$rootScope', '$http', '$location', 
 
 			if (response.data.success) {
 				var sings = response.data.sings;
+				$scope.songs = sings;
 				angular.forEach(sings, function (sing, index) {
 					if (!$scope.authors[sing.author]) $scope.authors[sing.author] = [];
 					$scope.authors[sing.author].push(sing);
@@ -205,6 +216,7 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 
 		$scope.create = function () {
 			$scope.song.text = window.tinymce.activeEditor.getContent();
+			$scope.song.copylink = $scope.importlink;
 			$http.post('/api/create', $scope.song).
 			then( function (response) {
 				if (response.data.success) {

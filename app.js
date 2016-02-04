@@ -46,10 +46,24 @@ routes(opts);
 //app.get('/', function (req, res) { res.sendFile(__dirname+'/public/index.html'); });
 
 app.get('/', function (req, res) {
-	if (req.session.userId) {
-		res.redirect('/catalog/'+req.session.userId);
+	if (req.user) {
+		if (req.user.useOld) {
+			res.redirect('/catalog/'+req.session.userId);
+		} else {
+			res.sendFile(__dirname+'/public/client.html');
+		}
 	} else {
 		res.render('index');
+	}
+});
+app.get('/switch_version', function (req, res) {
+	if (req.user) {
+		req.user.useOld = !req.user.useOld;
+		req.user.save(function () {
+			res.redirect('/');
+		});
+	} else {
+		res.send('error');
 	}
 });
 
