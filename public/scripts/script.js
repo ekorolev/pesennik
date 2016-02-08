@@ -79,9 +79,9 @@ App.controller('authController', ['$scope', '$rootScope', '$http', '$location', 
 				$root.auth = false;
 				$root.user = {};
 
-				//$cookies.remove('logintoken:email');
-				//$cookies.remove('logintoken:token');
-				//$cookies.remove('logintoken:series');
+				$cookies.remove('logintoken:email');
+				$cookies.remove('logintoken:token');
+				$cookies.remove('logintoken:series');
 			}, function () {
 				console.log('error');
 			});
@@ -125,6 +125,18 @@ App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies',
 						$cookies.put('logintoken:token', response.data.cookie.token);
 						$cookies.put('logintoken:series', response.data.cookie.series);
 					}
+				}
+			});
+		} else {
+
+			console.log('try check');
+			$http.get('/api/signin/check').
+			then(function (response) {
+				var data = response.data;
+				console.log(data);
+				if (data.auth) {
+					$root.auth = true;
+					$root.user = data.user;
 				}
 			});
 		}
@@ -305,3 +317,23 @@ App.controller('usersListController', ['$scope', '$rootScope', '$http',
 		});
 	}
 ]);
+
+App.filter('orderByKey', [ function () {
+	return function (input) {
+	    if (!angular.isUndefined(input)) {
+	        var tmpInput = [];
+	        angular.forEach(input, function(value, key){
+	            tmpInput.push(key);
+	        });
+	        tmpInput.sort();
+
+	        var tmpOutput = {};
+	        angular.forEach(tmpInput, function(key){
+	            tmpOutput[key] = input[key];
+	        });
+	        return tmpOutput;
+	    } else {
+	        return input;
+	    }
+	};
+}]);

@@ -1,4 +1,4 @@
-<div ng-repeat='(index, author) in authors'>
+<div ng-repeat='(index, author) in authors | orderByKey'>
 	<b>{{index}}</b>
 	<ul class='list-unstyled'>
 		<li ng-repeat='(second_index, song) in author'>

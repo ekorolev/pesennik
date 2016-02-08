@@ -140,7 +140,6 @@ module.exports = function (opts) {
 	});
 
 	app.post('/api/signin/remember', function (req, res) {
-		console.log('remember_me: ', req.body);
 		var logintoken_email = req.body.logintoken_email;
 		var logintoken_token = req.body.logintoken_token;
 		var logintoken_series = req.body.logintoken_series;
