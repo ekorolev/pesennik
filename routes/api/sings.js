@@ -107,16 +107,22 @@ module.exports = function (opts) {
 
 	var list_func = function (req, res) {
 		var id = req.params.id || req.user._id;
-		Sings.find({
-			user_id: id.toString()
-		}, function (err, sings) {
+		if (id) {
+			Sings.find({
+				user_id: id.toString()
+			}, function (err, sings) {
+				res.send({
+					error: err? err : null,
+					success: err? false : true,
+					sings: sings,
+					owner_id: id
+				});
+			})		
+		} else {
 			res.send({
-				error: err? err : null,
-				success: err? false : true,
-				sings: sings,
-				owner_id: id
+				error: 'auth'
 			});
-		})		
+		}		
 	}
 	app.get('/api/list/:id', list_func);
 	app.get('/api/list', list_func);
