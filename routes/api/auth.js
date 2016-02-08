@@ -41,10 +41,12 @@ function guidGenerator() {
 module.exports = function (opts) {
 	var app = opts.app;
 	var Users = opts.models.users;
+	var LoginToken = opts.models.logintoken;
 
 	var userDelete = prepareUserDelete(opts);
 	
 	app.post('/api/signin', function (req, res) {
+		console.log('try signin');
 		Users.findOne({login: {$regex: req.body.login, $options: 'i'}}, function( err, user ) {
 			if (err) res.send('error #002'); else {
 
@@ -78,16 +80,39 @@ module.exports = function (opts) {
 									error: "invalid_password"
 								})
 							} else {
-								req.session.userId = user._id.toString();
-								res.send({
-									success: true,
-									result: {
-										user: {
-											login: user.login,
-											id: user._id.toString()
+
+								if (req.body.remember_me) {
+									var logintoken = new LoginToken({email: user.login});
+									logintoken.save(function () {
+										req.session.userId = user._id.toString();
+										res.send({
+											success: true,
+											result: {
+												user: {
+													login: user.login,
+													id: user._id.toString()
+												}
+											},
+											cookie: {
+												email: logintoken.email,
+												token: logintoken.token,
+												series: logintoken.series
+											}
+										});										
+									})
+								} else {
+									req.session.userId = user._id.toString();
+									res.send({
+										success: true,
+										result: {
+											user: {
+												login: user.login,
+												id: user._id.toString()
+											}
 										}
-									}
-								});
+									});			
+								}
+
 							}
 						}
 					})
@@ -114,8 +139,57 @@ module.exports = function (opts) {
 		}
 	});
 
+	app.post('/api/signin/remember', function (req, res) {
+		console.log('remember_me: ', req.body);
+		var logintoken_email = req.body.logintoken_email;
+		var logintoken_token = req.body.logintoken_token;
+		var logintoken_series = req.body.logintoken_series;
+		LoginToken.findOne({
+			email: logintoken_email,
+			token: logintoken_token,
+			series: logintoken_series
+		}, function (err, logintoken) {
+			if (err) res.send({error: err}); else {
+				if (!logintoken) res.send({error: 'logintoken_404'}); else {
+					Users.findOne({
+						login: logintoken_email
+					}, function (err, user) {
+						if (err || !user) {
+							res.send({
+								error: err ? err : 'user_404'
+							});
+						} else {
+							logintoken.save(function () {
+								req.session.userId = user._id.toString();
+								res.send({
+									success: true,
+									result: {
+										user: {
+											login: user.login,
+											id: user._id.toString()
+										}
+									},
+									cookie: {
+										email: logintoken.email,
+										token: logintoken.token,
+										series: logintoken.series
+									}
+								});										
+							})
+						}
+					})
+				}
+			}
+		});
+	});
+
 	app.get('/api/signout', function (req, res) {
 		req.session.userId = false;
+		if (req.user) {
+			LoginToken.remove({email: req.user.login}, function (error) {
+				console.log('error remove token: ', error);
+			});
+		}
 		res.send({
 			success: true
 		});

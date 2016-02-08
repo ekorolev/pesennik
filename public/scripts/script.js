@@ -27,25 +27,34 @@ App.controller('indexController', ['$rootScope', '$location',
 		} 
 	}
 ]);
-App.controller('authController', ['$scope', '$rootScope', '$http', '$location',
-	function ($scope, $root, $http, $location) {
+App.controller('authController', ['$scope', '$rootScope', '$http', '$location', '$cookies',
+	function ($scope, $root, $http, $location, $cookies) {
 		$scope.form = {};
 
 		if (!$root.auth) {
 			$scope.auth = false;
 		} else {
 			$scope.auth = true;
-			$scope.user = $root.User;
+			$scope.user = $root.user;
 		}
 
 		$scope.signin = function () {
 			$http.post('/api/signin', {
 				login: $scope.form.login,
-				password: $scope.form.password
+				password: $scope.form.password,
+				remember_me: $scope.form.remember_me
 			}).then(function (response) {
 				if (response.data.success) {
 					$root.user = response.data.result.user;
 					$root.auth = true;
+
+
+					if (response.data.cookie) {
+						$cookies.put('logintoken:email', response.data.cookie.email);
+						$cookies.put('logintoken:token', response.data.cookie.token);
+						$cookies.put('logintoken:series', response.data.cookie.series);
+					}
+
 					$location.path('/list');	
 				} else {
 					$scope.errorMessage = "Ошибка входа";
@@ -69,25 +78,19 @@ App.controller('authController', ['$scope', '$rootScope', '$http', '$location',
 			.then( function (response) {
 				$root.auth = false;
 				$root.user = {};
+
+				//$cookies.remove('logintoken:email');
+				//$cookies.remove('logintoken:token');
+				//$cookies.remove('logintoken:series');
 			}, function () {
 				console.log('error');
-			})
+			});
 		}
 	}
 ]);
 
-App.controller('MainController', ['$scope', '$rootScope', '$http',
-	function ($scope, $root, $http) {
-		$http.get('/api/signin/check').
-		then( function (response) {
-			console.log(response);
-			if (response.data.auth) {
-				$root.auth = true;
-				$root.user = response.data.user;
-			}
-		}, function () {
-			console.log('error');
-		});
+App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies',
+	function ($scope, $root, $http, $cookies) {
 
 		$root.loadingOn = function () {
 			$root.loading = true;
@@ -99,6 +102,31 @@ App.controller('MainController', ['$scope', '$rootScope', '$http',
 
 		if (!$root.auth) {
 			console.log('you are not auth!');
+		}
+
+		var logintoken_email = $cookies.get('logintoken:email');
+		console.log('logintoken email: ', logintoken_email);
+		if (logintoken_email && !$root.auth) {
+			var logintoken_token = $cookies.get('logintoken:token');
+			var logintoken_series = $cookies.get('logintoken:series');
+			$http.post('/api/signin/remember', {
+				logintoken_email: logintoken_email,
+				logintoken_series: logintoken_series,
+				logintoken_token: logintoken_token
+			}).then( function (response) {
+				console.log('remember_response: ', response.data);
+				if (response.data.error) {
+					console.log(response.data.error);
+				} else {
+					$root.auth  = true;
+					$root.user = response.data.result.user;
+					if (response.data.cookie) {
+						$cookies.put('logintoken:email', response.data.cookie.email);
+						$cookies.put('logintoken:token', response.data.cookie.token);
+						$cookies.put('logintoken:series', response.data.cookie.series);
+					}
+				}
+			});
 		}
 	}
 
