@@ -225,4 +225,29 @@ module.exports = function (opts) {
 			}
 		})
 	});
+
+	// Жалкое копирование
+	app.get('/api/copy/:sing_id', function (req, res) {
+		var sing_id = req.params.sing_id;
+		Sings.findById(sing_id, function (err, sing) {
+			if (err) res.send({error: err}); else {
+				if (!sing) res.send({error: 'song_404'}); else {
+					createSing({
+						author: sing.author,
+						name: sing.name,
+						text: sing.text,
+						user: req.user,
+						copylink: sing.copylink
+					}, function (err, sing) {
+						if (err) res.send({error: err}); else {
+							res.send({
+								success: true,
+								song: sing
+							});
+						}
+					})
+				}
+			}
+		})
+	})
 }

@@ -194,7 +194,7 @@ App.controller('listController', ['$scope', '$rootScope', '$http', '$location', 
 ]);
 
 App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams', '$location',
-	function ($scope, $root, $http, $params) {
+	function ($scope, $root, $http, $params, $location) {
 		$scope.song = {};
 
 		$http.get('/api/song/'+$params.id).
@@ -214,6 +214,17 @@ App.controller('songController', ['$scope', '$rootScope', '$http', '$routeParams
 			$http.get('/api/deletesong/'+$scope.song._id).
 			then( function (response) {
 				$scope.deleteOK = true;
+			});
+		}
+
+		$scope.copy = function () {
+			$http.get('/api/copy/'+$scope.song._id).
+			then(function (res) {
+				if (res.data.success) {
+					$location.path('/song/'+res.data.song._id);
+				} else {
+					console.log(res.data);
+				}
 			});
 		}
 	}

@@ -5,6 +5,9 @@
 	<div ng-if='!!song.copylink'>
 		Импортировано: <a href='{{song.copylink}}' target="blank">{{song.copylink}}</a>
 	</div>
+	<div ng-if='$root.user.id!=song.user_id'>
+		<small><a ng-click='copy()'>Скопировать песню к себе в каталог</a></small>
+	</div>
 	<ul class='list-unstyled' ng-if='$root.user.id==song.user_id && $root.auth'>
 		<li><a href='#/song/{{song._id}}/edit'>Редактировать</a></li>
 		<li><a ng-click='delete()'>Удалить</a>
