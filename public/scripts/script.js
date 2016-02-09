@@ -153,6 +153,7 @@ App.controller('listController', ['$scope', '$rootScope', '$http', '$location', 
 		var url;
 		if ($scope.owner_id) url = '/api/list/'+$scope.owner_id; else url='/api/list';
 
+		$root.loadingOn();
 		$http.get(url).
 		then(function (response){
 			console.log(response.data);
@@ -166,6 +167,8 @@ App.controller('listController', ['$scope', '$rootScope', '$http', '$location', 
 				});
 
 			}
+
+			$root.loadingOff();
 		}, function () {
 			console.log('error');
 		});
@@ -278,6 +281,7 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 		$scope.song = {};
 
 		$scope.create = function () {
+			$root.loadingOn();
 			$scope.song.text = window.tinymce.activeEditor.getContent();
 			$scope.song.copylink = $scope.importlink;
 			$http.post('/api/create', $scope.song).
@@ -287,6 +291,7 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 				} else {
 
 				}
+				$root.loadingOff();
 			}, function () {
 
 			});
@@ -294,6 +299,7 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 		}
 
 		$scope.import = function () {
+			$root.loadingOn();
 			$http.post('/api/import', {
 				link: $scope.importlink
 			}).
@@ -306,6 +312,8 @@ App.controller('createController', ['$scope', '$rootScope', '$http', '$location'
 				} else {
 
 				}
+
+				$root.loadingOff();
 			}, function () {
 				console.log('/api/import error');
 			})
