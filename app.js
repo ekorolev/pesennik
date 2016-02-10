@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
 			res.sendFile(__dirname+'/public/client.html');
 		}
 	} else {
-		res.render('index');
+		res.sendFile(__dirname+'/public/client.html');
 	}
 });
 app.get('/switch_version', function (req, res) {
