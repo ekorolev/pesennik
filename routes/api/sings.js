@@ -7,7 +7,9 @@ function deleteScript(text) {
 	return text
 		.replace(/<script/g, "")
 		.replace(/&lt;script/g, "")
-		.replace(/<(?:[^"'>]+|(["'])(?:\\[\s\S]|(?!\1)[\s\S])*\1)*>/g, "");
+		.replace(/<a[^>]*>\"\>/g, "<b>")
+		.replace(/<\/a>/g, "</b>");
+		//.replace(/<(?:[^"'>]+|(["'])(?:\\[\s\S]|(?!\1)[\s\S])*\1)*>/g, "");
 }
 
 var prepareGetSingFromAMDM = function ( opts ) {
@@ -79,6 +81,43 @@ var prepareGetSingFromHM6 = function ( opts ) {
 
 } // prepareGetSingFromHM6
 
+var prepareGetSingFromMUZLAND = function (opts) {
+	var jquery = opts.jquery;
+
+	return function ( link, callback ) {
+		request( link, function (err, response, body) {
+			console.log('import muzland:::');
+			if (err) {
+				callback( new Error(err) );
+			} else {
+				//console.log('Prepare envirment');
+				//body = body.replace(/(<iframe)(.*)<\/iframe>/g, "");
+				//console.log(body);
+				jsdom.env({
+					html: body,
+					src: [jquery],
+					done: function (errors, window) {
+						if (errors) {
+							callback(new Error(errors));
+						} else {
+							var text = window.$('pre').html();
+							var artist = window.$('div[itemprop=byArtist]').text();
+							var name =  window.$('div[itemprop=name]').text();
+
+							console.log('name=', name, '; artist=', artist);
+							callback(null, {
+								text: text,
+								artist: artist,
+								name: name
+							});							
+						}
+					} // done function
+				}); // jsdom.env
+			} 
+		}); // request
+	} // return
+}
+
 var gettingCreateSingFunction = function (opts) {
 	var Authors = opts.models.authors;
 	var Users = opts.models.users;
@@ -147,6 +186,7 @@ module.exports = function (opts) {
 	var Users = opts.models.users;
 	var getSingFromAMDM = prepareGetSingFromAMDM(opts);
 	var getSingFromHM6 = prepareGetSingFromHM6(opts);
+	var getSingFromMUZLAND = prepareGetSingFromMUZLAND(opts);
 	var createSing = gettingCreateSingFunction(opts);
 
 
@@ -208,14 +248,16 @@ module.exports = function (opts) {
 			
 			// IMPORT FROM AMDM
 			if (import_host == 'amdm.ru') {
-				console.log('import from: ', import_host);
 				getSingFromAMDM( link, successImportAndSendData);
 
 			// IMPORT FROM HM6
 			} else if (import_host == 'hm6.ru') { 
-				console.log('import from: ', import_host);
 				getSingFromHM6( link, successImportAndSendData);
 			
+			// IMPORT FROM MUZLAND
+			} else if (import_host == 'muzland.ru') {
+				getSingFromMUZLAND( link, successImportAndSendData);
+
 			// WRONG IMPORT
 			} else {
 				res.send({error: 'wrong import'})
