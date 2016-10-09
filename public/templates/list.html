@@ -1,7 +1,7 @@
 <div ng-repeat='(index, author) in authors | orderByKey'>
 	<b>{{index}}</b>
 	<ul class='list-unstyled'>
-		<li ng-repeat='(second_index, song) in author'>
+		<li ng-repeat='(second_index, song) in author | orderBy:"name"'>
 			<div style='display: inline-block'>
 				<a href='#/song/{{song._id}}'>{{song.author}} - {{song.name}}</a>
 			</div>
