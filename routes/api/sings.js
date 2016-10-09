@@ -7,8 +7,6 @@ function deleteScript(text) {
 	return text
 		.replace(/<script/g, "")
 		.replace(/&lt;script/g, "")
-		//.replace(/<a.*>/g, "<b>")
-		//.replace(/<\/a>/g, "</b>");
 		.replace(/<(?:[^"'>]+|(["'])(?:\\[\s\S]|(?!\1)[\s\S])*\1)*>/g, "");
 }
 
