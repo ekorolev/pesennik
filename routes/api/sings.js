@@ -1,11 +1,15 @@
 var request = require('request');
 var jsdom = require('node-jsdom');
 var async = require('async');
+var url = require('url');
 
 function deleteScript(text) {
 	return text
 		.replace(/<script/g, "")
-		.replace(/&lt;script/g, "");
+		.replace(/&lt;script/g, "")
+		//.replace(/<a.*>/g, "<b>")
+		//.replace(/<\/a>/g, "</b>");
+		.replace(/<(?:[^"'>]+|(["'])(?:\\[\s\S]|(?!\1)[\s\S])*\1)*>/g, "");
 }
 
 var prepareGetSingFromAMDM = function ( opts ) {
@@ -38,6 +42,45 @@ var prepareGetSingFromAMDM = function ( opts ) {
 		})
 	}
 }
+
+var prepareGetSingFromHM6 = function ( opts ) {
+	var jquery = opts.jquery;
+
+	return function ( link, callback ) {
+		request( link, function (err, response, body) {
+			console.log('import hm6:::');
+			if (err) {
+				callback( new Error(err) );
+			} else {
+				jsdom.env({
+					html: body,
+					src: [jquery],
+					done: function (errors, window) {
+						if (errors) {
+							callback(new Error(errors));
+						} else {
+							var text = window.$('pre').html();
+							var nameOfSong = window.$('main h1.b-title').text();
+							var arrayOfSong = nameOfSong.split(' - ');
+							var artist = arrayOfSong[0];
+							artist = window.$.trim(artist);
+							var name = arrayOfSong[1];
+
+							console.log('name=', name, '; artist=', artist);
+							callback(null, {
+								text: text,
+								artist: artist,
+								name: name
+							});							
+						}
+					} // done function
+				}); // jsdom.env
+			} 
+		}); // request
+	} // return
+
+} // prepareGetSingFromHM6
+
 var gettingCreateSingFunction = function (opts) {
 	var Authors = opts.models.authors;
 	var Users = opts.models.users;
@@ -76,7 +119,10 @@ var gettingCreateSingFunction = function (opts) {
 		}, function (err, results) {
 			if (err) callback(err); else {
 
-				text = deleteScript(text);
+				
+				// Перенес функцию очистки текста на этап редактирования.
+				//text = deleteScript(text);
+				//console.log(text);
 
 				var sing = new Sings({
 					name: name,
@@ -102,6 +148,7 @@ module.exports = function (opts) {
 	var Sings = opts.models.sings;
 	var Users = opts.models.users;
 	var getSingFromAMDM = prepareGetSingFromAMDM(opts);
+	var getSingFromHM6 = prepareGetSingFromHM6(opts);
 	var createSing = gettingCreateSingFunction(opts);
 
 
@@ -140,21 +187,41 @@ module.exports = function (opts) {
 
 	app.post('/api/import', function (req, res) {
 		var link = req.body.link;
+
+		// Унифицируем функцию отправки ответа.
+		var successImportAndSendData = function ( err, data ) {
+			res.send({
+				error: err ? err : null,
+				success: err ? false: true,
+				text: !err ? deleteScript(data.text) : "", 
+				author: data.artist,
+				name: data.name
+			});
+		}
+
 		if (!req.user) {
 			res.send({
 				error: "auth"
 			});
 		} else {
+			// Определяем принадлежность сайту.
+			var URL_Object = url.parse(link);
+			var import_host = URL_Object.hostname;
+			
+			// IMPORT FROM AMDM
+			if (import_host == 'amdm.ru') {
+				console.log('import from: ', import_host);
+				getSingFromAMDM( link, successImportAndSendData);
 
-			getSingFromAMDM(link, function (err, data) {
-				res.send({
-					error: err ? err : null,
-					success: err ? false : true,
-					text: data.text,
-					author: data.artist,
-					name: data.name
-				});
-			});
+			// IMPORT FROM HM6
+			} else if (import_host == 'hm6.ru') { 
+				console.log('import from: ', import_host);
+				getSingFromHM6( link, successImportAndSendData);
+			
+			// WRONG IMPORT
+			} else {
+				res.send({error: 'wrong import'})
+			}
 		}
 	});
 
