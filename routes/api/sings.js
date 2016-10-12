@@ -282,6 +282,66 @@ module.exports = function (opts) {
 		});
 	});
 
+	app.post('/api/import_and_create', function (req, res) {
+		var url = req.body.url;
+
+		// Унифицируем функцию отправки ответа.
+		var successImportAndSendData = function ( err, data ) {
+			res.send({
+				error: err ? err : null,
+				success: err ? false: true,
+				text: !err ? deleteScript(data.text) : "", 
+				author: data.artist,
+				name: data.name
+			});
+
+			if (!err) {
+				createSing({
+					author: data.artist,
+					name: data.name,
+					text: deleteScript(data.text),
+					copylink: url,
+					user: req.user
+				}, function (error, sing) {
+					if (error) res.send({ error: 'error' }); else {
+						res.send({ success: 'success', sing: sing });
+					}
+				});
+			} else {
+				res.send({
+					error: "import error"
+				});
+			}
+		}
+
+		if (!req.user) {
+			res.send({
+				error: "auth"
+			});
+		} else {
+			// Определяем принадлежность сайту.
+			var URL_Object = url.parse(link);
+			var import_host = URL_Object.hostname;
+			
+			// IMPORT FROM AMDM
+			if (import_host == 'amdm.ru') {
+				getSingFromAMDM( link, successImportAndSendData);
+
+			// IMPORT FROM HM6
+			} else if (import_host == 'hm6.ru') { 
+				getSingFromHM6( link, successImportAndSendData);
+			
+			// IMPORT FROM MUZLAND
+			} else if (import_host == 'muzland.ru') {
+				getSingFromMUZLAND( link, successImportAndSendData);
+
+			// WRONG IMPORT
+			} else {
+				res.send({error: 'wrong import'})
+			}
+		}
+	});
+
 	app.get('/api/deletesong/:id', function (req, res) {
 		var id = req.params.id;
 		Sings.findById(id, function (err, sing) {

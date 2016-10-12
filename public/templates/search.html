@@ -1,0 +1,23 @@
+<div class='col-md-4' ng-repeat='(ind, type) in search_types'>
+	<div class='panel panel-primary'>
+		<div class='panel-heading'>
+			Результаты с сайта <b><a href='http://{{type}}.ru' class='white' target="blank">{{type}}.ru</a></b>
+		</div>
+		<ul class="list-group">
+			<li ng-repeat="(index, song) in search_results[type]" class="list-group-item">
+				<div class='row'>
+					<div class='col-sm-8'>
+						<a href="{{song.link}}" target="blank">
+							{{song.artist}} - {{song.name}}
+						</a>
+					</div>
+					<div class='col-sm-4'>
+						<div class='btn-group-sm'>
+							<button title='Добавить песню к себе в каталог' type='button' class='btn btn-default'><span class='glyphicon glyphicon-plus'></span></button>
+							<button type='button' class='btn btn-default'>ОК</button>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+</div>

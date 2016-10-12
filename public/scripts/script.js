@@ -15,16 +15,35 @@ App.config(['$routeProvider',
 			when('/song/:id/edit', {templateUrl: '/templates/edit.html', controller: 'editController'}).
 			when('/users', {templateUrl: '/templates/users.html', controller: 'usersListController'}).
 			when('/signup', {templateUrl:'/templates/signup.html'}).
+			when('/search/:query', {templateUrl: '/templates/search.html', controller: 'searchController'}).
 			otherwise({
 				redirectTo: '/'
 			});
 	}
 ]);
+
+App.run(function($rootScope) {
+    $rootScope.$on("$locationChangeStart", function(event, next, current) { 
+    	console.log("Change location!");
+
+    	var url_parser = document.createElement('a');
+    	url_parser.href = next;
+
+    	console.log(url_parser.hash.split('/'));
+    	if ( url_parser.hash.split('/').indexOf("search")+1 ) {
+    		$rootScope.searchSection = true;
+    		console.log('Use search section');
+    	} else {
+			$rootScope.searchSection = false;    		
+    	}
+    });
+});
+
 App.controller('indexController', ['$rootScope', '$location',
 	function ($root, $location) {
 		if ($root.auth) {
 			$location.path('/list');
-		} 
+		}
 	}
 ]);
 App.controller('authController', ['$scope', '$rootScope', '$http', '$location', '$cookies',
@@ -89,14 +108,19 @@ App.controller('authController', ['$scope', '$rootScope', '$http', '$location', 
 	}
 ]);
 
-App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies',
-	function ($scope, $root, $http, $cookies) {
+App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies', '$location',
+	function ($scope, $root, $http, $cookies, $location) {
+		$scope.global = $root;
 
 		$root.loadingOn = function () {
 			$root.loading = true;
 		}
 		$root.loadingOff = function () {
 			$root.loading = false;
+		}
+
+		$root.search = function (query) {
+			$location.path("/search/"+query);
 		}
 
 
@@ -334,6 +358,25 @@ App.controller('usersListController', ['$scope', '$rootScope', '$http',
 		}, function () {
 			console.log('error');
 		});
+	}
+]);
+
+App.controller('searchController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
+	function ($scope, $rootScope, $http, $location, $params) {
+		$scope.search_results = {};
+		$scope.search_types = [ 'amdm', 'hm6', 'muzland' ];
+		console.log($location.search());
+		$http.get('/api/search?query='+$params.query).
+		then( 
+			function (response) {
+				$scope.search_results = response.data;
+
+				console.log(response.data);
+			},
+			function () {
+				console.log('error search request');
+			}
+		);
 	}
 ]);
 

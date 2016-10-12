@@ -4,6 +4,8 @@ module.exports = function (opts) {
 
 	var auth = require('./auth');
 	var sings = require('./sings');
+	var search = require('./search');
+	search(opts);
 	auth(opts);
 	sings(opts);
 

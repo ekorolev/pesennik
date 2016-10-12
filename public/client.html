@@ -6,12 +6,15 @@
 
 	<link rel='stylesheet' type='text/css' href='/bootstrap/css/bootstrap.min.css'>
 	<link rel='stylesheet' type='text/css' href='/styles/app.css'>
+	<script type="text/javascript" src="/scripts/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular-cookies.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular-route.min.js"></script>
 	<script type="text/javascript" src="/scripts/angular-sanitize.min.js"></script>
 	<script type="text/javascript" src="/scripts/script.js"></script>
   	<script type="text/javascript" src="/tinymce/tinymce.min.js"></script>
+
 </head>
 <body>
 
@@ -22,12 +25,36 @@
 					<span>Песенник</span>
 				</div>
 			</div>
+			<div class='col-md-8'>
+				<div id='SearchPanel'>
+					<form id="SearchForm" ng-submit="search(query)" class='form-horizontal'>
+						<div>
+							<p class='form-control-static'>Поиск песен, аккордов, исполнителей</p>
+						</div>
+						<div class='input-group'>
+							<input class='form-control' type="text" ng-model="query" name="query" placeholder="Введите запрос">
+							<span class='input-group-btn'>
+								<input class='btn btn-defult' type='submit' style='color:black' value='Искать'>
+							</span>
+						</div>	
+						<div>
+							<p class='form-control-static'> </p>
+						</div>
+					</form>
+				</div>
+			</div>
 			<div class='col-md-7'>
 			</div>
 		</div>
 	</div>
 	<div class='container-fluid' id="Main">
-		<div class="row">
+		<div class="row" ng-show="global.searchSection">
+			<div ng-view>
+				empty block
+			</div>
+		</div>
+
+		<div class="row" ng-show="!global.searchSection">
 			<div class='col-md-1'>
 				<div class='text-center' ng-if='$root.loading'>
 					<img src="/images/loading.gif">
@@ -71,7 +98,7 @@
 
 					<div class='personal-block' ng-if='$root.auth'>
 						<b>{{$root.user.login}}</b>
-						<span class='glyphicon glyphicon-log-out' ng-click='signout()'></span>	
+						<span class='glyphicon glyphicon-log-out' ng-click='signout()'></span>
 					</div>
 				</div>
 				<div class='clearfix'></div>
