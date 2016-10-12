@@ -1,4 +1,6 @@
-<div class='col-md-4' ng-repeat='(ind, type) in search_types'>
+
+
+<div class='col-sm-4' ng-repeat='(ind, type) in search_types'>
 	<div class='panel panel-primary'>
 		<div class='panel-heading'>
 			Результаты с сайта <b><a href='http://{{type}}.ru' class='white' target="blank">{{type}}.ru</a></b>
@@ -13,11 +15,34 @@
 					</div>
 					<div class='col-sm-4'>
 						<div class='btn-group-sm'>
-							<button title='Добавить песню к себе в каталог' type='button' class='btn btn-default'><span class='glyphicon glyphicon-plus'></span></button>
-							<button type='button' class='btn btn-default'>ОК</button>
+							<button title='Добавить песню к себе в каталог' type='button' class='btn btn-default' ng-click="add_song(song)">
+								<span class='glyphicon glyphicon-plus'></span>
+							</button>
+							<button title='Посмотреть текст' ng-click="show_song(song)" type='button' class='btn btn-default'>
+								<span class='glyphicon glyphicon-eye-open'></span>
+							</button>
 						</div>
 					</div>
 				</div>
 			</li>
 		</ul>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Название модали</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
 </div>

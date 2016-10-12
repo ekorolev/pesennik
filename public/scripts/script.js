@@ -8,14 +8,14 @@ App.config(['$routeProvider',
 	function ($routeProvider) {
 		$routeProvider.
 			when('/', {templateUrl: '/templates/index.html', controller: 'indexController'}).
-			when('/list', { templateUrl: '/templates/list.html', controller: 'listController' }).
-			when('/list/:id', { templateUrl: '/templates/list.html', controller:'listController'}).
-			when('/song/:id', {templateUrl: '/templates/song.html', controller: 'songController'}).
-			when('/create', {templateUrl: '/templates/create.html', controller: 'createController'}).
+			when('/list/', { templateUrl: '/templates/list.html', controller: 'listController' }).
+			when('/list/:id/', { templateUrl: '/templates/list.html', controller:'listController'}).
+			when('/song/:id/', {templateUrl: '/templates/song.html', controller: 'songController'}).
+			when('/create/', {templateUrl: '/templates/create.html', controller: 'createController'}).
 			when('/song/:id/edit', {templateUrl: '/templates/edit.html', controller: 'editController'}).
-			when('/users', {templateUrl: '/templates/users.html', controller: 'usersListController'}).
-			when('/signup', {templateUrl:'/templates/signup.html'}).
-			when('/search/:query', {templateUrl: '/templates/search.html', controller: 'searchController'}).
+			when('/users/', {templateUrl: '/templates/users.html', controller: 'usersListController'}).
+			when('/signup/', {templateUrl:'/templates/signup.html'}).
+			when('/search/:query/', {templateUrl: '/templates/search.html', controller: 'searchController'}).
 			otherwise({
 				redirectTo: '/'
 			});
@@ -24,18 +24,7 @@ App.config(['$routeProvider',
 
 App.run(function($rootScope) {
     $rootScope.$on("$locationChangeStart", function(event, next, current) { 
-    	console.log("Change location!");
 
-    	var url_parser = document.createElement('a');
-    	url_parser.href = next;
-
-    	console.log(url_parser.hash.split('/'));
-    	if ( url_parser.hash.split('/').indexOf("search")+1 ) {
-    		$rootScope.searchSection = true;
-    		console.log('Use search section');
-    	} else {
-			$rootScope.searchSection = false;    		
-    	}
     });
 });
 
@@ -121,6 +110,10 @@ App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies', '
 
 		$root.search = function (query) {
 			$location.path("/search/"+query);
+		}
+		
+		$scope.goto_home = function () {
+			$location.path('/list');
 		}
 
 
@@ -298,6 +291,7 @@ App.controller('editController', ['$scope', '$rootScope', '$http', '$location', 
 
 App.controller('createController', ['$scope', '$rootScope', '$http', '$location',
 	function ($scope, $root, $http, $location) {
+		console.log('createController');
 		window.tinymce.remove('#text');
 		window.tinymce.init({
 			selector: '#text'
@@ -365,7 +359,29 @@ App.controller('searchController', ['$scope', '$rootScope', '$http', '$location'
 	function ($scope, $rootScope, $http, $location, $params) {
 		$scope.search_results = {};
 		$scope.search_types = [ 'amdm', 'hm6', 'muzland' ];
-		console.log($location.search());
+
+		$scope.add_song = function ( song ) {
+			$http.post('/api/import_and_create', {
+				url: song.link
+			}).
+			then( function (response) {
+				console.log(response);
+			}, function ( response ) {
+				console.log(response);
+			});
+		};
+
+		$scope.show_song = function ( song ) {
+			$http.post('/api/import', {
+				link: song.link
+			}).
+			then( function (response) {
+				console.log(response);
+			}, function (response) {
+				console.log(response);
+			});
+		};
+
 		$http.get('/api/search?query='+$params.query).
 		then( 
 			function (response) {

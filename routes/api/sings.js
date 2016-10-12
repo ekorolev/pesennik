@@ -1,6 +1,7 @@
 var request = require('request');
 var jsdom = require('node-jsdom');
 var async = require('async');
+var normalizeUrl = require('normalize-url');
 var url = require('url');
 
 function deleteScript(text) {
@@ -283,18 +284,10 @@ module.exports = function (opts) {
 	});
 
 	app.post('/api/import_and_create', function (req, res) {
-		var url = req.body.url;
+		var link = normalizeUrl(req.body.url);
 
 		// Унифицируем функцию отправки ответа.
 		var successImportAndSendData = function ( err, data ) {
-			res.send({
-				error: err ? err : null,
-				success: err ? false: true,
-				text: !err ? deleteScript(data.text) : "", 
-				author: data.artist,
-				name: data.name
-			});
-
 			if (!err) {
 				createSing({
 					author: data.artist,
@@ -309,7 +302,8 @@ module.exports = function (opts) {
 				});
 			} else {
 				res.send({
-					error: "import error"
+					error: "import error",
+					message: err
 				});
 			}
 		}
@@ -337,7 +331,7 @@ module.exports = function (opts) {
 
 			// WRONG IMPORT
 			} else {
-				res.send({error: 'wrong import'})
+				res.send({error: 'wrong import', link: link, host: import_host})
 			}
 		}
 	});
