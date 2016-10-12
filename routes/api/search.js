@@ -48,7 +48,8 @@ module.exports = function ( opts ) {
 										result.push({
 											artist: $(array[0]).text(),
 											name: $(array[1]).text(),
-											link: $(array[1]).attr('href')
+											link: $(array[1]).attr('href'),
+											type: 'amdm'
 										});
 									});
 
@@ -62,7 +63,8 @@ module.exports = function ( opts ) {
 										result.push({
 											artist: a_text.split(' - ')[0],
 											name: a_text.split(' - ')[1],
-											link: 'http://hm6.ru'+a_href
+											link: 'http://hm6.ru'+a_href,
+											type: 'hm6'
 										});									
 									});
 
@@ -75,6 +77,7 @@ module.exports = function ( opts ) {
 											artist: $(array[0]).text(),
 											name: $(array[1]).text(),
 											link: $(array[1]).attr('href'), 
+											type: 'muzland'
 										});
 									});
 

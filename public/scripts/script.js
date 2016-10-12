@@ -25,6 +25,24 @@ App.config(['$routeProvider',
 App.run(function($rootScope) {
     $rootScope.$on("$locationChangeStart", function(event, next, current) { 
 
+    	var url_parser = document.createElement('a');
+    	url_parser.href = next;
+
+    	if ( url_parser.hash.split('/').indexOf("search")+1 ) {
+    		$rootScope.searchSection = true;
+
+    		$("#LEFT_SECTION").hide();
+    		$("#MARGIN_LEFT").hide();
+    		$("#CENTER_SECTION").removeClass("col-md-7");
+    		$("#CENTER_SECTION").addClass("col-md-12");
+    	} else {
+			$rootScope.searchSection = false;
+
+			$("#LEFT_SECTION").show();
+			$("#MARGIN_LEFT").show();
+			$("#CENTER_SECTION").removeClass("col-md-12");
+			$("#CENTER_SECTION").addClass("col-md-7");
+    	}
     });
 });
 
@@ -359,24 +377,56 @@ App.controller('searchController', ['$scope', '$rootScope', '$http', '$location'
 	function ($scope, $rootScope, $http, $location, $params) {
 		$scope.search_results = {};
 		$scope.search_types = [ 'amdm', 'hm6', 'muzland' ];
+		$scope.current_song = {};
 
-		$scope.add_song = function ( song ) {
+		$scope.clearModal = function () {
+			$("#textView #saveSongButton").text("Сохранить к себе в каталог");
+			$("#textView #saveSongButton").removeAttr("disabled");
+		};
+
+		$scope.add_song = function ( song, index ) {
+			song = song || $scope.current_song;
+			if (!index) {
+				$("#saveSongButton").text("Загрузка...");
+				$("#saveSongButton").attr("disabled", "disabled");
+			}
+
+			var id = "#Cell_"+song.type+"_"+index;
+			console.log(id);
+			$(id).find(".loading_small").show();
 			$http.post('/api/import_and_create', {
 				url: song.link
 			}).
 			then( function (response) {
+				if ( index ) {
+					$(id).find(".loading_small").hide();
+					$(id).find(".added").text("Песня добавлена в каталог");
+				} else {
+					console.log("Я ЗАШЕЛ СЮДА!!!");
+
+					$("#saveSongButton").text("Сохранено!");
+				}
+
 				console.log(response);
 			}, function ( response ) {
 				console.log(response);
 			});
 		};
 
-		$scope.show_song = function ( song ) {
+		$scope.show_song = function ( song, index ) {
+			var id = "#Cell_"+song.type+"_"+index;
+			$(id).find(".loading_small").show();
+
 			$http.post('/api/import', {
 				link: song.link
 			}).
 			then( function (response) {
+				$(id).find(".loading_small").hide();
+
 				console.log(response);
+
+				$scope.current_song = response.data;
+				$("#textView").modal();
 			}, function (response) {
 				console.log(response);
 			});

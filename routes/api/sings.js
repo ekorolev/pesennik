@@ -162,6 +162,8 @@ var gettingCreateSingFunction = function (opts) {
 				//text = deleteScript(text);
 				//console.log(text);
 
+				console.log("Copylink: ", copylink);
+
 				var sing = new Sings({
 					name: name,
 					author: results.author.name,
@@ -172,8 +174,15 @@ var gettingCreateSingFunction = function (opts) {
 					copylink: copylink,
 					createdAt: new Date()
 				});
-
+				console.log('Пытаемся создать подобную песню: ', sing);
+				console.log("Вот такая ссылка, откуда копировали: ", sing.copylink);
 				sing.save(function (err, sing) {
+
+					if (err) {
+						console.log('Песня не создана. Ошибка: ', err); 
+					} else {
+						console.log('Песня создана, все хорошо.');
+					}
 					callback(err, sing);
 				});
 			}
@@ -225,7 +234,7 @@ module.exports = function (opts) {
 	});
 
 	app.post('/api/import', function (req, res) {
-		var link = req.body.link;
+		var link = normalizeUrl(req.body.link);
 
 		// Унифицируем функцию отправки ответа.
 		var successImportAndSendData = function ( err, data ) {
@@ -234,7 +243,8 @@ module.exports = function (opts) {
 				success: err ? false: true,
 				text: !err ? deleteScript(data.text) : "", 
 				author: data.artist,
-				name: data.name
+				name: data.name,
+				link: link
 			});
 		}
 
@@ -285,18 +295,20 @@ module.exports = function (opts) {
 
 	app.post('/api/import_and_create', function (req, res) {
 		var link = normalizeUrl(req.body.url);
+		console.log("LINK: ", link);
 
 		// Унифицируем функцию отправки ответа.
 		var successImportAndSendData = function ( err, data ) {
 			if (!err) {
+				console.log('Create song: ', data);
 				createSing({
 					author: data.artist,
 					name: data.name,
 					text: deleteScript(data.text),
-					copylink: url,
+					copylink: link,
 					user: req.user
 				}, function (error, sing) {
-					if (error) res.send({ error: 'error' }); else {
+					if (error) res.send({ error: 'error', message: error }); else {
 						res.send({ success: 'success', sing: sing });
 					}
 				});

@@ -1,5 +1,4 @@
 
-
 <div class='col-sm-4' ng-repeat='(ind, type) in search_types'>
 	<div class='panel panel-primary'>
 		<div class='panel-heading'>
@@ -7,18 +6,22 @@
 		</div>
 		<ul class="list-group">
 			<li ng-repeat="(index, song) in search_results[type]" class="list-group-item">
-				<div class='row'>
+				<div class='row' id="Cell_{{type}}_{{index}}">
+					<div class='loading_small'>
+						Ожидаем ответа...
+					</div>
 					<div class='col-sm-8'>
 						<a href="{{song.link}}" target="blank">
 							{{song.artist}} - {{song.name}}
 						</a>
+						<span class="added small text-muted"></span>
 					</div>
 					<div class='col-sm-4'>
 						<div class='btn-group-sm'>
-							<button title='Добавить песню к себе в каталог' type='button' class='btn btn-default' ng-click="add_song(song)">
+							<button title='Добавить песню к себе в каталог' type='button' class='btn btn-default' ng-click="add_song(song, index)">
 								<span class='glyphicon glyphicon-plus'></span>
 							</button>
-							<button title='Посмотреть текст' ng-click="show_song(song)" type='button' class='btn btn-default'>
+							<button title='Посмотреть текст' ng-click="show_song(song, index)" type='button' class='btn btn-default'>
 								<span class='glyphicon glyphicon-eye-open'></span>
 							</button>
 						</div>
@@ -29,19 +32,22 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="textView" tabindex="-1" current-song-index="" current-song-type="" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Название модали</h4>
+        <button ng-click="clearModal()" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{current_song.author}} - {{current_song.name}}</h4>
       </div>
       <div class="modal-body">
-        ...
+        <pre ng-bind-html="current_song.text">
+        </pre>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-        <button type="button" class="btn btn-primary">Сохранить изменения</button>
+        <button ng-click="clearModal()" type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button" id="saveSongButton" class="btn btn-primary" ng-click="add_song()">
+        	Сохранить к себе в каталог
+        </button>
       </div>
     </div>
   </div>
