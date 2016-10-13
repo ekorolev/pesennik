@@ -46,25 +46,10 @@ routes(opts);
 //app.get('/', function (req, res) { res.sendFile(__dirname+'/public/index.html'); });
 
 app.get('/', function (req, res) {
-	if (req.user) {
-		if (req.user.useOld) {
-			res.redirect('/catalog/'+req.session.userId);
-		} else {
-			res.sendFile(__dirname+'/public/client.html');
-		}
-	} else {
-		res.sendFile(__dirname+'/public/client.html');
-	}
+	res.sendFile(__dirname+'/public/client.html');
 });
 app.get('/switch_version', function (req, res) {
-	if (req.user) {
-		req.user.useOld = !req.user.useOld;
-		req.user.save(function () {
-			res.redirect('/');
-		});
-	} else {
-		res.send('error');
-	}
+	res.send({ message: 'Old version has not supported' });
 });
 
 
