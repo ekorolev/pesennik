@@ -1,5 +1,5 @@
 <ul class='list-unstyled'>
-	<li ng-repeat="user in users">
+	<li ng-repeat="user in users | orderBy:'-singCount'">
 		<b>{{user.login}}</b> | 
 		<a href='#/list/{{user._id}}'>Каталог</a> 
 		<small>(<b>{{user.singCount}}</b> песен в каталоге)</small>
