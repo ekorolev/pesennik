@@ -193,4 +193,58 @@ module.exports = function (opts) {
 			success: true
 		});
 	});
+
+	app.post('/api/password/change', function (req, res) {
+		if (!req.user) {
+			res.send({
+				error: "auth_error"
+			});
+		} else {
+			Users.findById(req.user._id, function (err, user) {
+				if (err) {
+					res.send({
+						error: "db_error"
+					});
+				} else {
+					if (!user) {
+						res.send({
+							error: 'auth_error && user is not found'
+						});
+					} else {
+						user.compare(req.body.old_password, function (err, isMatch) {
+							if (err) {
+								console.log('change password bcrypt error: ', err);
+								console.log(req.body);
+								res.send({
+									error: 'bcrypt_error',
+									message: err
+								});
+							} else {
+								if (!isMatch) {
+									res.send({
+										error: "invalid_error"
+									});
+								} else {
+
+									user.cryptNow = true;
+									user.password = req.body.new_password1;
+									user.save( function (err, user) {
+										if (err) {
+											res.send({
+												error: 'save_user_error'
+											});
+										} else {
+											res.send({
+												success: true
+											});
+										}
+									})
+								}
+							}
+						});
+					}
+				}
+			})
+		}
+	});
 }

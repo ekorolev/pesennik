@@ -118,6 +118,7 @@ App.controller('authController', ['$scope', '$rootScope', '$http', '$location', 
 App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies', '$location',
 	function ($scope, $root, $http, $cookies, $location) {
 		$scope.global = $root;
+		$scope.gridMaster = "AKA";
 
 		$root.loadingOn = function () {
 			$root.loading = true;
@@ -134,6 +135,42 @@ App.controller('MainController', ['$scope', '$rootScope', '$http', '$cookies', '
 			$location.path('/list');
 		}
 
+		$scope.change_password = function () {
+			console.log("Change password!");
+
+			if ($scope.new_password1 != $scope.new_password2) {
+
+				console.log('Нехорошо. Пароли-то не совпадают новые!');
+			} else {
+				$("#changePasswordButton").attr("disabled", "disabled");
+				$("#changePasswordButton").attr("value", "Загрузка...");
+
+				$http.post("/api/password/change", {
+					old_password: $scope.old_password,
+					new_password1: $scope.new_password1,
+					new_password2: $scope.new_password2
+				}).
+				then( function (response) {
+					console.log(response.data);
+
+					if (response.data.success) {
+						$("#changePasswordForm input").attr("disabled", "disabled");
+						$("#changePasswordButton").attr("value", "Пароль изменен!");
+						setTimeout(function () {
+							$("#changePasswordModal").modal('hide')
+						}, 1200);
+					} else {
+						$("#changePasswordButton").attr("value", "Ошибка, попробуйте еще раз!");
+						setTimeout(function() {
+							$("#changePasswordButton").attr("value", "Отправить");
+							$("#changePasswordButton").removeAttr("disabled");
+						}, 1200);
+					}
+				}, function (response) {
+
+				});
+			}
+		};
 
 		if (!$root.auth) {
 			console.log('you are not auth!');
