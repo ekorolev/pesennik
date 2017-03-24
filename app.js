@@ -5,7 +5,7 @@ var ejsLocals = require('ejs-locals');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var mongoose = require('mongoose').connect('mongodb://localhost/pesennik');
+var mongoose = require('mongoose').connect('mongodb://mongoservice/pesennik');
 var models = require('./models')(mongoose);
 var routes = require('./routes');
 var fs = require('fs');
@@ -25,7 +25,8 @@ app.use( express.static( __dirname + '/public' ));
 app.use( session({
 	store: new RedisStore({
 		client: redisClient,
-		port: 7992
+        host: '172.17.0.3',
+		port: 6379
 	}),
 	secret: "98**189jdh*!oih"
 }));
