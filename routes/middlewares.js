@@ -2,6 +2,11 @@ module.exports = function (opts) {
 	var app = opts.app;
 	var Users = opts.models.users;
 
+	app.use( function(req, res, next) {
+		if (!req.session) req.session = {};
+		next()
+	});
+	
 	app.use( function (req, res, next) {
 		var userId = req.session.userId;
 		if (!userId) {
