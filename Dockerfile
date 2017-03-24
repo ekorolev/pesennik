@@ -14,4 +14,4 @@ ADD ./views /var/webapp/views
 
 RUN cd /var/webapp && npm install
 
-CMD node /var/webapp/app.js
+CMD cd /var/webapp && node ./app.js
