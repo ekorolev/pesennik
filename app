@@ -42,14 +42,12 @@ function parse_create_args {
             ;;
     esac
 }
-function parse_start_args {
-    echo "$1 $2"
-}
-function parse_stop_args {
-    echo "$1 $2"
-}
-function parse_restart_args {
-    echo "$1 $2"
+function parse_manage_args {
+    case $1 in
+        -n|--name)
+            CONTAINER_NAME=$2
+            ;;
+    esac
 }
 
 function error_exit {
@@ -112,12 +110,30 @@ case $command in
         ;;
 
     start)
-        echo 'start'
+        while [[ $# -gt 1 ]]
+        do
+            parse_manage_args $1 $2
+            shift
+            shift
+        done
+        docker start $CONTAINER_NAME
         ;;
     stop)
-        echo 'stop'
+        while [[ $# -gt 1 ]]
+        do
+            parse_manage_args $1 $2
+            shift
+            shift
+        done
+        docker stop $CONTAINER_NAME
         ;;
     restart)
-        echo 'restart'
+        while [[ $# -gt 1 ]]
+        do
+            parse_manage_args $1 $2
+            shift
+            shift
+        done
+        docker restart $CONTAINER_NAME
         ;;
 esac
