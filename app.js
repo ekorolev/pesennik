@@ -1,3 +1,8 @@
+var MONGO_HOST = process.env.MONGO_HOST || 'localhost';
+var MONGO_PORT = process.env.MONGO_PORT || '27017';
+var REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+var REDIS_PORT = process.env.REDIS_PORT || '6379';
+
 var dateFormat = require('./lib/dateFormat');
 var express = require('express');
 var redis = require('redis');
@@ -5,7 +10,8 @@ var ejsLocals = require('ejs-locals');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var mongoose = require('mongoose').connect('mongodb://localhost/pesennik');
+var mongoose = require('mongoose')
+    .connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/pesennik`);
 var models = require('./models')(mongoose);
 var routes = require('./routes');
 var fs = require('fs');
@@ -25,7 +31,8 @@ app.use( express.static( __dirname + '/public' ));
 app.use( session({
 	store: new RedisStore({
 		client: redisClient,
-		port: 7992
+        host: REDIS_HOST,
+		port: REDIS_PORT
 	}),
 	secret: "98**189jdh*!oih"
 }));

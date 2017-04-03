@@ -1,0 +1,12 @@
+[Unit]
+Description=Pesennik container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a pesennik
+ExecStop=/usr/bin/docker stop -t 2 pesennik
+
+[Install]
+WantedBy=default.target
